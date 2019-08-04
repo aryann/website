@@ -1,0 +1,3 @@
+[submodule "seam-carving-js"]
+	path = seam-carving-js
+	url = git@github.com:aryann/seam-carving-js.git

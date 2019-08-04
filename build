@@ -1,0 +1,3 @@
+#!/bin/bash
+
+cp -r seam-carving-js/dist docs/seam-carving
