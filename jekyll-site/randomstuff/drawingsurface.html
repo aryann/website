@@ -1,0 +1,150 @@
+---
+layout: canvasdemo
+title: Drawing surface
+---
+
+<div id="box">
+  <div id="button">
+    <a href="#" id="toggleBox"></a>
+  </div>
+  <div id="content">
+    <p>
+      Click anywhere below to start drawing something. Try drawing
+      your name. Drawings are persisted on your local machine.
+    </p>
+
+    <table>
+      <tr>
+	<th rowspan="2">Controls</th>
+	<td>
+	  <a href="#" id="undo">Undo</a>
+	</td>
+      </tr>
+      <tr>
+	<td>
+	  <a href="#" id="clear">Clear</a>
+	</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+{% include canvas.html %}
+
+<script type="text/javascript">
+  (function() {
+    // Disclaimer: The code below is known to work in Chrome; it
+    // has not been tested in any other browser.
+
+    var newPoint = function(x, y) {
+      return {
+        x: x,
+        y: y
+      };
+    }
+
+    // Returns the x and y coordinates of a MouseEvent, relative to
+    // the canvas. This function is known to do the right thing in
+    // Chrome.
+    var getPos = function(event) {
+      return newPoint(event.clientX - canvas.offsetLeft,
+                      event.clientY - canvas.offsetTop);
+    }
+
+    // The local storage key used to persist state.
+    var IMAGE_KEY = "drawing";
+
+    var newImage = function(context2d, imageKey) {
+      currentPos = null;
+      actions = JSON.parse(window.localStorage.getItem(imageKey)) || [];
+
+      var that = {};
+
+      var saveState = function() {
+        window.localStorage.setItem(imageKey, JSON.stringify(actions));
+      }
+
+      var drawFromSerializedForm = function() {
+        context2d.clearRect(0, 0, canvas.width, canvas.height);
+        for (var i = 0; i < actions.length; i++) {
+          var center = actions[i][0];
+          for (var j = 0; j < actions[i][1].length; j++) {
+            var end = actions[i][1][j];
+            drawLine(center, end);
+          }
+        }
+      }
+
+      that.undo = function() {
+        if (actions.length === 0) {
+          return;
+        }
+        actions.pop();
+        saveState();
+        drawFromSerializedForm();
+      }
+
+      var drawLine = function(from, to) {
+        context2d.beginPath();
+        context2d.moveTo(from.x, from.y);
+        context2d.lineTo(to.x, to.y);
+        context2d.stroke();
+      }
+
+      that.clear = function() {
+        window.localStorage.clear();
+        actions = [];
+        drawFromSerializedForm();
+      }
+
+      that.registerMousedown = function(pos) {
+        if (currentPos) {
+          currentPos = null;
+          saveState();
+        } else {
+          currentPos = pos;
+          actions.push([currentPos, []]);
+        }
+      }
+
+      that.handleMove = function(pos) {
+        if (!currentPos) {
+          return;
+        }
+        actions[actions.length - 1][1].push(pos);
+        drawLine(currentPos, pos);
+      }
+
+      drawFromSerializedForm();
+
+      return that;
+    }
+
+    var canvas = document.getElementById("c");
+    var context = canvas.getContext("2d");
+    context.canvas.width = window.innerWidth;
+    context.canvas.height = window.innerHeight - 50;
+
+    var img = newImage(context, IMAGE_KEY);
+    canvas.addEventListener("mousedown", function(event) {
+        img.registerMousedown(getPos(event));
+    });
+    canvas.addEventListener("mousemove", function(event) {
+        img.handleMove(getPos(event));
+    });
+
+    window.onload = function() {
+      // For future extensibility... :)
+      var verbs = ["undo", "clear"];
+      for (var i = 0; i < verbs.length; i++) {
+        (function(verb) {
+          document.getElementById(verb).onclick = function() {
+            img[verb]();
+            _gaq.push(["_trackEvent", "drawingSurfaceControls", verb]);
+            return false;
+          }
+        })(verbs[i]);
+      }
+    };
+  })();
+</script>

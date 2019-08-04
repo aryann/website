@@ -1,0 +1,13 @@
+body {
+  font-family: 'Open Sans', sans-serif;
+  line-height: 1.5em;
+}
+
+a {
+  color: blue;
+  text-decoration: none;
+}
+
+p {
+  margin-bottom: 1.5em;
+}

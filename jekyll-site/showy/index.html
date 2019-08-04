@@ -1,0 +1,66 @@
+---
+---
+
+<!doctype html>
+<html>
+  <head>
+    <title>Showy</title>
+    <meta charset="utf-8" />
+
+    <style type="text/css">
+      #c {
+        display: block;
+        margin: 0 auto;
+      }
+
+      #loading {
+        text-align: center;
+      }
+    </style>
+
+    <script>
+      {% include analytics.js %}
+    </script>
+  </head>
+
+  <body>
+    <p id="loading">Loading images... Patience is bitter, but its fruit is sweet.</p>
+
+    {% include canvas.html %}
+
+    <script>
+      (function() {
+        var NUM_IMAGES = 123;
+        var TIME_BETWEEN_IMAGES_MILLIS = 50;
+
+        var i;
+        var images = [];
+
+        // Note that the image names are not 0-padded. This adds a
+        // jitter every nine frames. This is intentional because it creates
+        // a more pleasing effect.
+        for (i = 0; i < NUM_IMAGES; i++) {
+          var image = new Image();
+          image.src = "1/" + i + ".jpg";
+          images.push(image);
+        }
+
+        document.body.removeChild(document.getElementById("loading"));
+
+        var canvas = document.getElementById("c");
+        canvas.width = 1024;
+        canvas.height = 1024;
+        var context = c.getContext("2d");
+
+        var currentImageIdx = 0;
+
+        var changeImage = function() {
+          context.drawImage(images[currentImageIdx], 0, 0);
+          currentImageIdx = (currentImageIdx + 1) % NUM_IMAGES;
+        };
+
+        window.setInterval(changeImage, TIME_BETWEEN_IMAGES_MILLIS);
+      })();
+    </script>
+  </body>
+</html>

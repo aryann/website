@@ -1,0 +1,61 @@
+---
+layout: canvasdemo
+title: Vector field
+---
+
+{% include canvas.html %}
+
+<script type="text/javascript">
+  (function() {
+    var width = window.innerWidth;
+    var height = window.innerHeight;
+    var size = 50;
+
+    var canvas = document.getElementById("c");
+    var context = canvas.getContext("2d");
+    context.canvas.width = width;
+    context.canvas.height = height;
+    context.lineCap = "round";
+
+    var newPoint = function(x, y) {
+      return {
+        x: x,
+        y: y
+      };
+    }
+
+    var getPos = function(event) {
+      return newPoint(event.clientX - canvas.offsetLeft,
+                      event.clientY - canvas.offsetTop);
+    }
+
+    var draw = function(mousePos) {
+      context.clearRect(0, 0, canvas.width, canvas.height);
+
+      for (var x0 = 0; x0 < width + size; x0 += size) {
+        for (var y0 = 0; y0 < height + size; y0 += size) {
+          var dx = x0 - mousePos.x;
+          var dy = y0 - mousePos.y;
+          var xSign = dx < 0 ? 1 : -1;
+          var ySign = dy < 0 ? 1 : -1;
+          var x1 = x0 + xSign * size / 2 / Math.sqrt(1 + Math.pow(dy / dx, 2));
+          var y1 = y0 + ySign * size / 2 / Math.sqrt(1 + 1 / Math.pow(dy / dx, 2));
+          var d = Math.sqrt(dx * dx + dy * dy);
+          context.lineWidth = d / size * 2;
+          context.beginPath();
+          context.moveTo(x0, y0);
+          context.lineTo(x1, y1);
+          context.stroke();
+        }
+      }
+    }
+
+    canvas.addEventListener("mousemove", function(event) {
+      draw(getPos(event));
+    });
+
+    // Ensures that something is drawn before the user's mouse is
+    // moved for the first time.
+    draw(newPoint(0, 0));
+  })();
+</script>

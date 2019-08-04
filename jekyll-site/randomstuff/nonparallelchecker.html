@@ -1,0 +1,151 @@
+---
+layout: canvasdemo
+title: Non-parallel-looking checker board
+---
+
+<div id="box">
+  <div id="button">
+    <a href="#" id="toggleBox"></a>
+  </div>
+
+  <div id="content">
+    <p>
+      This is a checker board whose rows and columns do not appear
+      parallel. Try playing with the control below to adjust the angle
+      of the black and white cells, which changes the intensity of the
+      illusion.
+    </p>
+
+    <table>
+      <tr>
+        <th rowspan="3">Controls</th>
+        <td>
+          <label for="angle">Angle:</label>
+        </td>
+        <td>
+          <input id="angle" type="range" min="0" max="180" step="1" value="45" />
+        </td>
+        <td id="angleValue"></td>
+      </tr>
+      <tr>
+        <td colspan="3">
+          <a href="#" id="toggle"></a>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+{% include canvas.html %}
+
+<script type="text/javascript">
+  (function() {
+    var DEFAULT_SIZE = 80;
+    var DEFAULT_ANGLE = 45;
+
+    var canvas = document.getElementById("c");
+    var context = canvas.getContext("2d");
+
+    var drawAngledBoxes = function(context, size, angle) {
+      var angledBoxSize = size / 3;
+      var innerAngledBoxSize = angledBoxSize / 2;
+
+      for (var c = -1; c < context.canvas.width / size + 1; c++) {
+        for (var r = 0; r < context.canvas.height / size + 1; r++) {
+          var x = c * size;
+          var y = r * size;
+          context.save();
+          context.translate(x, y);
+          context.rotate(angle);
+
+          context.fillStyle = "white";
+          context.fillRect(-angledBoxSize / 2, -angledBoxSize / 2,
+                           angledBoxSize, angledBoxSize);
+
+          context.fillStyle = "black";
+          if ((c + r) % 2 == 0) {
+            context.fillRect(-innerAngledBoxSize, -innerAngledBoxSize,
+                             innerAngledBoxSize, innerAngledBoxSize);
+            context.fillRect(0, 0,
+                             innerAngledBoxSize, innerAngledBoxSize);
+          } else {
+            context.fillRect(-innerAngledBoxSize, 0,
+                             innerAngledBoxSize, innerAngledBoxSize);
+            context.fillRect(0, -innerAngledBoxSize,
+                             innerAngledBoxSize, innerAngledBoxSize);
+          }
+
+          context.restore();
+        }
+      }
+    };
+
+    var drawGrid = function(context, size, angle, showAngledBoxes) {
+      angle = angle * Math.PI / 180.0;
+
+      context.canvas.width = window.innerWidth;
+      context.canvas.height = window.innerHeight;
+
+      context.fillStyle = "lightblue";
+      context.fillRect(0, 0, context.canvas.width, context.canvas.height);
+
+      context.fillStyle = "blue";
+      for (var c = -1; c < context.canvas.width / size + 1; c++) {
+        for (var r = 0; r < context.canvas.height / size + 1; r++) {
+          var x = c * size + size * (r % 2);
+          var y = r * size;
+          if (c % 2 == 0) {
+            context.fillRect(x, y, size, size);
+          }
+        }
+      }
+
+      if (showAngledBoxes) {
+        drawAngledBoxes(context, size, angle);
+      }
+    };
+
+    var size = DEFAULT_SIZE;
+    var angle = DEFAULT_ANGLE;
+    var showAngledBoxes = true;
+    drawGrid(context, size, angle, showAngledBoxes);
+
+    var updateValue = function(id, value) {
+      var elem = document.getElementById(id);
+      if (elem) {
+        elem.innerHTML = value + "&deg;";
+      }
+    };
+
+    var angleSlider = document.getElementById("angle");
+    if (angleSlider) {
+      angleSlider.onchange = function() {
+        angle = parseFloat(angleSlider.value);
+        drawGrid(context, size, angle, showAngledBoxes);
+        updateValue("angleValue", angle);
+      }
+    }
+
+    updateValue("angleValue", angle);
+
+    var toggleLink = document.getElementById("toggle");
+    if (toggleLink) {
+      var updateToggleLink = function() {
+        toggleLink.innerHTML = showAngledBoxes ?
+          "Hide angled boxes." :
+          "Show angled boxes.";
+      }
+      updateToggleLink();
+      toggle.onclick = function() {
+        showAngledBoxes = !showAngledBoxes;
+        updateToggleLink();
+        drawGrid(context, size, angle, showAngledBoxes);
+      }
+    }
+
+    window.onresize = function() {
+      drawGrid(context, size, angle, showAngledBoxes);
+    };
+
+  })();
+</script>
