@@ -1,0 +1,290 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Text wall</title>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet" />
+
+    <style type="text/css">
+      html, body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+      }
+
+      body {
+        display: none;
+        overflow: hidden;
+      }
+
+      #box {
+        background-color: lightgoldenrodyellow;
+        border: 1px solid lightgrey;
+        bottom: 0;
+        position: absolute;
+        right: 0;
+        width: 420px;
+        z-index: 1;
+      }
+
+      #content {
+        padding: 15px;
+      }
+
+      #content p {
+        margin-top: 0;
+      }
+
+      #button a {
+        display: block;
+        padding: 15px;
+        border-bottom: 1px solid lightgrey;
+      }
+
+      table {
+        border-collapse: separate;
+      }
+
+      td {
+        padding: 15px;
+        padding-right: 0;
+      }
+
+      th {
+        text-align: left;
+        padding: 15px;
+        padding-left: 0;
+        border-right: 1px solid lightgrey;
+      }
+
+      #c {
+        left: 0;
+        position: absolute;
+        top: 0;
+        z-index: 0;
+      }
+
+      body {
+  font-family: 'Open Sans', sans-serif;
+  line-height: 1.5em;
+}
+
+a {
+  color: blue;
+  text-decoration: none;
+}
+
+p {
+  margin-bottom: 1.5em;
+}
+
+    </style>
+
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-36868551-1']);
+_gaq.push(['_trackPageview']);
+
+(function() {
+  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+  ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+
+      var utils = {
+
+  // Returns a new 2D array with dimensions rows by cols. All cells
+  // will initially contain the value given by initVal.
+  create2DArray: function(rows, cols, initVal) {
+    var res = new Array(rows);
+    for (var row = 0; row < rows; row++) {
+      res[row] = new Array(cols);
+      for (var col = 0; col < cols; col++) {
+	res[row][col] = initVal;
+      }
+    }
+    return res;
+  },
+
+  // A Python-like mod.
+  mod: function(n, p) {
+    if (n < 0) {
+      return p + n % p;
+    } else {
+      return n % p;
+    }
+  },
+
+};
+
+    </script>
+  </head>
+
+  <body>
+    <style type="text/css">
+
+  pre {
+    margin: 0;
+    overflow: hidden;
+    //white-space: pre-wrap;
+    //word-wrap: break-word;
+  }
+
+</style>
+
+<div id="box">
+  <div id="button">
+    <a href="#" id="toggleBox"></a>
+  </div>
+
+
+  <div id="content">
+    <table>
+      <tr>
+        <th rowspan="1">Controls</th>
+        <td>
+          <label for="radius">Brush size:</label>
+        </td>
+        <td>
+          <input id="radius" type="range" min="0" max="8" value="1" />
+        </td>
+        <td id="radiusValue"></td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<div id="text"></div>
+
+
+
+<script type="text/javascript">
+  var ROWS = 60;
+  var COLS = 1000;
+  var radius = 1;
+
+  var NUM_LETTERS = 10000;
+  var LETTERS = 26;
+
+  var generateRandomLetters = function(n) {
+    var letters = new Array(NUM_LETTERS);
+    for (var i = 0; i < n; i++) {
+      letters[i] = String.fromCharCode("a".charCodeAt(0) + Math.floor(Math.random() * LETTERS));
+    }
+    return letters;
+  }
+
+  var map = function(array, mapFn) {
+    for (var i = 0; i < array.length; i++) {
+      array[i] = mapFn(array[i]);
+    }
+    return array;
+  }
+
+  var textBox = document.getElementById("text");
+  for (var row = 0; row < ROWS; row++) {
+    var pre = document.createElement("pre");
+    var letters = generateRandomLetters(COLS);
+    for (var col = 0; col < COLS; col++) {
+      var span = document.createElement("span");
+      span.id = row + "," + col;
+      span.innerHTML = letters[col];
+      pre.appendChild(span);
+    }
+    textBox.appendChild(pre);
+  }
+
+  var neighborsFromPoint = function(row, col, radius) {
+    var res = [];
+    for (var r = 0; r <= radius; r++) {
+      for (var x = -1 * r; x <= r; x++) {
+        for (var y = -1 * r; y <= r; y++) {
+          var neighborRow = row + x;
+          var neighborCol= col + y;
+          if (neighborRow < 0 || neighborRow >= ROWS ||
+              neighborCol < 0 || neighborCol >= COLS) {
+            continue;
+          }
+          res.push({row: neighborRow, col: neighborCol});
+        }
+      }
+    }
+    return res;
+
+  }
+
+  var spans = textBox.getElementsByTagName("span");
+  map(spans, function(span) {
+      span.onmouseover = function() {
+        var parts = span.id.split(",");
+        var row = parseInt(parts[0]);
+        var col = parseInt(parts[1]);
+        var neighbors = neighborsFromPoint(row, col, radius);
+        map(neighbors, function(neighbor) {
+            var id = neighbor.row + "," + neighbor.col;
+            var elem = document.getElementById(id);
+            elem.style.visibility = "hidden";
+        });
+      };
+  });
+
+  var updateValue = function(id, value) {
+    var elem = document.getElementById(id);
+    if (elem) {
+      elem.innerHTML = value;
+    }
+  }
+
+  var radiusSlider = document.getElementById("radius");
+  if (radiusSlider) {
+    radiusSlider.value = radius;
+    radiusSlider.onchange = function() {
+        radius = parseInt(radiusSlider.value);
+        updateValue("radiusValue", radius);
+    }
+  }
+  updateValue("radiusValue", radius);
+
+
+</script>
+
+
+    <script type="text/javascript">
+      (function() {
+        var isHidden = function(element) {
+          return element.style.display === "none";
+        }
+
+        var url = document.URL.split("#")[0];
+        var boxDisplayKey = url + ".box_display";
+
+        var toggle = document.getElementById("toggleBox");
+        var content = document.getElementById("content");
+        if (toggle && content) {
+          var state = window.localStorage.getItem(boxDisplayKey);
+          if (state !== null) {
+            content.style.display = state;
+          }
+
+          var updateToggleBoxLink = function() {
+            toggle.innerHTML = (isHidden(content) ?
+                "&laquo; Show the box." :
+                "Hide this box. &raquo;");
+          }
+          updateToggleBoxLink();
+
+          toggle.onclick = function() {
+            content.style.display = isHidden(content) ? "block" : "none";
+            window.localStorage.setItem(boxDisplayKey, content.style.display);
+            updateToggleBoxLink();
+            _gaq.push(["_trackEvent", "infoBox", "toggle", "isVisible",
+                       Number(isHidden(content))]);
+          }
+        }
+
+        // Don't show anything until the document is ready.
+        document.getElementsByTagName("body")[0].style.display = "block";
+      })();
+    </script>
+  </body>
+</html>

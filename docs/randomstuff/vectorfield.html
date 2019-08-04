@@ -1,0 +1,227 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Vector field</title>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet" />
+
+    <style type="text/css">
+      html, body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+      }
+
+      body {
+        display: none;
+        overflow: hidden;
+      }
+
+      #box {
+        background-color: lightgoldenrodyellow;
+        border: 1px solid lightgrey;
+        bottom: 0;
+        position: absolute;
+        right: 0;
+        width: 420px;
+        z-index: 1;
+      }
+
+      #content {
+        padding: 15px;
+      }
+
+      #content p {
+        margin-top: 0;
+      }
+
+      #button a {
+        display: block;
+        padding: 15px;
+        border-bottom: 1px solid lightgrey;
+      }
+
+      table {
+        border-collapse: separate;
+      }
+
+      td {
+        padding: 15px;
+        padding-right: 0;
+      }
+
+      th {
+        text-align: left;
+        padding: 15px;
+        padding-left: 0;
+        border-right: 1px solid lightgrey;
+      }
+
+      #c {
+        left: 0;
+        position: absolute;
+        top: 0;
+        z-index: 0;
+      }
+
+      body {
+  font-family: 'Open Sans', sans-serif;
+  line-height: 1.5em;
+}
+
+a {
+  color: blue;
+  text-decoration: none;
+}
+
+p {
+  margin-bottom: 1.5em;
+}
+
+    </style>
+
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-36868551-1']);
+_gaq.push(['_trackPageview']);
+
+(function() {
+  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+  ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+
+      var utils = {
+
+  // Returns a new 2D array with dimensions rows by cols. All cells
+  // will initially contain the value given by initVal.
+  create2DArray: function(rows, cols, initVal) {
+    var res = new Array(rows);
+    for (var row = 0; row < rows; row++) {
+      res[row] = new Array(cols);
+      for (var col = 0; col < cols; col++) {
+	res[row][col] = initVal;
+      }
+    }
+    return res;
+  },
+
+  // A Python-like mod.
+  mod: function(n, p) {
+    if (n < 0) {
+      return p + n % p;
+    } else {
+      return n % p;
+    }
+  },
+
+};
+
+    </script>
+  </head>
+
+  <body>
+    <canvas id="c">
+  <p>
+    It looks like your browser
+    lacks <a href="http://en.wikipedia.org/wiki/Canvas_element">canvas</a>
+    support.
+  </p>
+</canvas>
+
+
+<script type="text/javascript">
+  (function() {
+    var width = window.innerWidth;
+    var height = window.innerHeight;
+    var size = 50;
+
+    var canvas = document.getElementById("c");
+    var context = canvas.getContext("2d");
+    context.canvas.width = width;
+    context.canvas.height = height;
+    context.lineCap = "round";
+
+    var newPoint = function(x, y) {
+      return {
+        x: x,
+        y: y
+      };
+    }
+
+    var getPos = function(event) {
+      return newPoint(event.clientX - canvas.offsetLeft,
+                      event.clientY - canvas.offsetTop);
+    }
+
+    var draw = function(mousePos) {
+      context.clearRect(0, 0, canvas.width, canvas.height);
+
+      for (var x0 = 0; x0 < width + size; x0 += size) {
+        for (var y0 = 0; y0 < height + size; y0 += size) {
+          var dx = x0 - mousePos.x;
+          var dy = y0 - mousePos.y;
+          var xSign = dx < 0 ? 1 : -1;
+          var ySign = dy < 0 ? 1 : -1;
+          var x1 = x0 + xSign * size / 2 / Math.sqrt(1 + Math.pow(dy / dx, 2));
+          var y1 = y0 + ySign * size / 2 / Math.sqrt(1 + 1 / Math.pow(dy / dx, 2));
+          var d = Math.sqrt(dx * dx + dy * dy);
+          context.lineWidth = d / size * 2;
+          context.beginPath();
+          context.moveTo(x0, y0);
+          context.lineTo(x1, y1);
+          context.stroke();
+        }
+      }
+    }
+
+    canvas.addEventListener("mousemove", function(event) {
+      draw(getPos(event));
+    });
+
+    // Ensures that something is drawn before the user's mouse is
+    // moved for the first time.
+    draw(newPoint(0, 0));
+  })();
+</script>
+
+
+    <script type="text/javascript">
+      (function() {
+        var isHidden = function(element) {
+          return element.style.display === "none";
+        }
+
+        var url = document.URL.split("#")[0];
+        var boxDisplayKey = url + ".box_display";
+
+        var toggle = document.getElementById("toggleBox");
+        var content = document.getElementById("content");
+        if (toggle && content) {
+          var state = window.localStorage.getItem(boxDisplayKey);
+          if (state !== null) {
+            content.style.display = state;
+          }
+
+          var updateToggleBoxLink = function() {
+            toggle.innerHTML = (isHidden(content) ?
+                "&laquo; Show the box." :
+                "Hide this box. &raquo;");
+          }
+          updateToggleBoxLink();
+
+          toggle.onclick = function() {
+            content.style.display = isHidden(content) ? "block" : "none";
+            window.localStorage.setItem(boxDisplayKey, content.style.display);
+            updateToggleBoxLink();
+            _gaq.push(["_trackEvent", "infoBox", "toggle", "isVisible",
+                       Number(isHidden(content))]);
+          }
+        }
+
+        // Don't show anything until the document is ready.
+        document.getElementsByTagName("body")[0].style.display = "block";
+      })();
+    </script>
+  </body>
+</html>

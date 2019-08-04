@@ -1,0 +1,309 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Z&ouml;llner optical illusion</title>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet" />
+
+    <style type="text/css">
+      html, body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+      }
+
+      body {
+        display: none;
+        overflow: hidden;
+      }
+
+      #box {
+        background-color: lightgoldenrodyellow;
+        border: 1px solid lightgrey;
+        bottom: 0;
+        position: absolute;
+        right: 0;
+        width: 420px;
+        z-index: 1;
+      }
+
+      #content {
+        padding: 15px;
+      }
+
+      #content p {
+        margin-top: 0;
+      }
+
+      #button a {
+        display: block;
+        padding: 15px;
+        border-bottom: 1px solid lightgrey;
+      }
+
+      table {
+        border-collapse: separate;
+      }
+
+      td {
+        padding: 15px;
+        padding-right: 0;
+      }
+
+      th {
+        text-align: left;
+        padding: 15px;
+        padding-left: 0;
+        border-right: 1px solid lightgrey;
+      }
+
+      #c {
+        left: 0;
+        position: absolute;
+        top: 0;
+        z-index: 0;
+      }
+
+      body {
+  font-family: 'Open Sans', sans-serif;
+  line-height: 1.5em;
+}
+
+a {
+  color: blue;
+  text-decoration: none;
+}
+
+p {
+  margin-bottom: 1.5em;
+}
+
+    </style>
+
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-36868551-1']);
+_gaq.push(['_trackPageview']);
+
+(function() {
+  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+  ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+
+      var utils = {
+
+  // Returns a new 2D array with dimensions rows by cols. All cells
+  // will initially contain the value given by initVal.
+  create2DArray: function(rows, cols, initVal) {
+    var res = new Array(rows);
+    for (var row = 0; row < rows; row++) {
+      res[row] = new Array(cols);
+      for (var col = 0; col < cols; col++) {
+	res[row][col] = initVal;
+      }
+    }
+    return res;
+  },
+
+  // A Python-like mod.
+  mod: function(n, p) {
+    if (n < 0) {
+      return p + n % p;
+    } else {
+      return n % p;
+    }
+  },
+
+};
+
+    </script>
+  </head>
+
+  <body>
+    <div id="box">
+  <div id="button">
+    <a href="#" id="toggleBox"></a>
+  </div>
+
+  <div id="content">
+    <p>
+      This is a demonstration of
+      the <a href="http://en.wikipedia.org/wiki/Z%C3%B6llner_illusion">Z&ouml;llner
+      illusion</a>. The horizontal lines look unparallel, but in
+      reality they are parallel.
+    </p>
+    <p>
+      Try playing with the controls to adjust the intensity of the
+      illusion.
+    </p>
+
+    <table>
+      <tr>
+        <th rowspan="2">Controls</th>
+        <td>
+          <label for="angle">Angle:</label>
+        </td>
+        <td>
+          <input id="angle" type="range" min="0" max="180" step="1" value="45" />
+        </td>
+        <td id="angleValue"></td>
+      </tr>
+      <tr>
+        <td colspan="3">
+          <a href="#" id="toggle">Hide the shorter lines.</a>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<canvas id="c">
+  <p>
+    It looks like your browser
+    lacks <a href="http://en.wikipedia.org/wiki/Canvas_element">canvas</a>
+    support.
+  </p>
+</canvas>
+
+
+<script type="text/javascript">
+  (function() {
+    var verticalSpacing = 100;
+    var lineWidth = verticalSpacing / 2;
+
+    var canvas = document.getElementById("c");
+    var context = canvas.getContext("2d");
+
+    var updateCanvasContext = function() {
+      context.canvas.width = window.innerWidth;;
+      context.canvas.height = window.innerHeight;;
+      context.lineCap = "round";
+      context.lineWidth = 4;
+      draw(angle, showShortLines);
+    }
+
+    var drawLine = function(from, to) {
+      context.beginPath();
+      context.moveTo(from.x, from.y);
+      context.lineTo(to.x, to.y);
+      context.stroke();
+    }
+
+    var clearCanvas = function() {
+      context.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    var draw = function(angle, showIntersectingLones) {
+      clearCanvas();
+
+      angle = angle * Math.PI / 180;
+      var dx = lineWidth * Math.cos(angle);
+      var dy = lineWidth * Math.sin(angle);
+
+      for (var i = 0; i < canvas.height / verticalSpacing; i++) {
+        // Draws one of the horizontal lines.
+        var y = i * verticalSpacing + verticalSpacing / 2;
+        drawLine({x: 0, y: y}, {x: canvas.width, y: y});
+
+        if (!showShortLines) {
+          continue;
+        }
+
+        var sign = 1 - 2 * (i % 2);
+        var y0 = y + dy * sign;
+        var y1 = y - dy * sign;
+
+        // Draws the shorter lines.
+        for (var j = 0; j < canvas.width / lineWidth + 1; j++) {
+           var x = j * lineWidth;
+           drawLine({x: x - dx, y: y0}, {x: x + dx, y: y1});
+        }
+      }
+    }
+
+    updateCanvasContext();
+    window.onresize = updateCanvasContext;
+
+    var showShortLines = true;
+    var angle = 30;
+    draw(angle, showShortLines);
+
+    var updateAngleValue = function() {
+      var angleValue = document.getElementById("angleValue");
+      if (angleValue) {
+        angleValue.innerHTML = angle + "&deg;";
+      }
+    }
+
+    var slider = document.getElementById("angle");
+    if (slider) {
+      updateAngleValue();
+      slider.onchange = function() {
+        angle = slider.value;
+        updateAngleValue();
+        clearCanvas();
+        draw(angle, showShortLines);
+        _gaq.push(["_trackEvent", "parallelLinesControls", "changeAngle",
+                   "angle", Number(angle)]);
+      }
+    }
+
+    var toggleLink = document.getElementById("toggle");
+    if (toggleLink) {
+      toggleLink.onclick = function() {
+        toggleLink.innerHTML = (showShortLines ? "Show" : "Hide") +
+            " the shorter lines.";
+        showShortLines = !showShortLines;
+        if (slider) {
+          slider.disabled = !slider.disabled;
+        }
+        clearCanvas();
+        draw(angle, showShortLines);
+        _gaq.push(["_trackEvent", "parallelLinesControls", "toggleShortLines",
+                   "shortLinesVisibility", Number(showShortLines)]);
+      }
+    }
+  })();
+</script>
+
+
+    <script type="text/javascript">
+      (function() {
+        var isHidden = function(element) {
+          return element.style.display === "none";
+        }
+
+        var url = document.URL.split("#")[0];
+        var boxDisplayKey = url + ".box_display";
+
+        var toggle = document.getElementById("toggleBox");
+        var content = document.getElementById("content");
+        if (toggle && content) {
+          var state = window.localStorage.getItem(boxDisplayKey);
+          if (state !== null) {
+            content.style.display = state;
+          }
+
+          var updateToggleBoxLink = function() {
+            toggle.innerHTML = (isHidden(content) ?
+                "&laquo; Show the box." :
+                "Hide this box. &raquo;");
+          }
+          updateToggleBoxLink();
+
+          toggle.onclick = function() {
+            content.style.display = isHidden(content) ? "block" : "none";
+            window.localStorage.setItem(boxDisplayKey, content.style.display);
+            updateToggleBoxLink();
+            _gaq.push(["_trackEvent", "infoBox", "toggle", "isVisible",
+                       Number(isHidden(content))]);
+          }
+        }
+
+        // Don't show anything until the document is ready.
+        document.getElementsByTagName("body")[0].style.display = "block";
+      })();
+    </script>
+  </body>
+</html>

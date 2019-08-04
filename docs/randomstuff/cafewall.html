@@ -1,0 +1,309 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Caf&eacute; wall illusion</title>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet" />
+
+    <style type="text/css">
+      html, body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+      }
+
+      body {
+        display: none;
+        overflow: hidden;
+      }
+
+      #box {
+        background-color: lightgoldenrodyellow;
+        border: 1px solid lightgrey;
+        bottom: 0;
+        position: absolute;
+        right: 0;
+        width: 420px;
+        z-index: 1;
+      }
+
+      #content {
+        padding: 15px;
+      }
+
+      #content p {
+        margin-top: 0;
+      }
+
+      #button a {
+        display: block;
+        padding: 15px;
+        border-bottom: 1px solid lightgrey;
+      }
+
+      table {
+        border-collapse: separate;
+      }
+
+      td {
+        padding: 15px;
+        padding-right: 0;
+      }
+
+      th {
+        text-align: left;
+        padding: 15px;
+        padding-left: 0;
+        border-right: 1px solid lightgrey;
+      }
+
+      #c {
+        left: 0;
+        position: absolute;
+        top: 0;
+        z-index: 0;
+      }
+
+      body {
+  font-family: 'Open Sans', sans-serif;
+  line-height: 1.5em;
+}
+
+a {
+  color: blue;
+  text-decoration: none;
+}
+
+p {
+  margin-bottom: 1.5em;
+}
+
+    </style>
+
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-36868551-1']);
+_gaq.push(['_trackPageview']);
+
+(function() {
+  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+  ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+
+      var utils = {
+
+  // Returns a new 2D array with dimensions rows by cols. All cells
+  // will initially contain the value given by initVal.
+  create2DArray: function(rows, cols, initVal) {
+    var res = new Array(rows);
+    for (var row = 0; row < rows; row++) {
+      res[row] = new Array(cols);
+      for (var col = 0; col < cols; col++) {
+	res[row][col] = initVal;
+      }
+    }
+    return res;
+  },
+
+  // A Python-like mod.
+  mod: function(n, p) {
+    if (n < 0) {
+      return p + n % p;
+    } else {
+      return n % p;
+    }
+  },
+
+};
+
+    </script>
+  </head>
+
+  <body>
+    <div id="box">
+  <div id="button">
+    <a href="#" id="toggleBox"></a>
+  </div>
+
+  <div id="content">
+    <p>
+      This is a demonstration of
+      the <a href="http://en.wikipedia.org/wiki/Caf%C3%A9_wall_illusion">caf&eacute;
+      wall illusion</a>. The rows of squares should look
+      sloped, but they are actually parallel.
+    </p>
+
+    <p>
+      Try playing with the controls to adjust the intensity of the
+      illusion.
+    </p>
+
+    <table>
+      <tr>
+        <th rowspan="3">Controls</th>
+        <td>
+          <label for="offset">Offset:</label>
+        </td>
+        <td>
+          <input id="offset" type="range" min="0" max="1" step="0.01" value="0.5" />
+        </td>
+        <td id="offsetValue"></td>
+      </tr>
+      <tr>
+        <td>
+          <label for="size">Size:</label>
+        </td>
+        <td>
+          <input id="size" type="range" min="25" max="100" step="1" value="50" />
+        </td>
+        <td id="sizeValue"></td>
+      </tr>
+      <tr>
+        <td colspan="3">
+          <a href="#" id="toggle"></a>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<canvas id="c">
+  <p>
+    It looks like your browser
+    lacks <a href="http://en.wikipedia.org/wiki/Canvas_element">canvas</a>
+    support.
+  </p>
+</canvas>
+
+
+<script type="text/javascript">
+  (function() {
+    var DEFAULT_SIZE = 50;
+    var DEFAULT_OFFSET = 0.4;
+
+    var canvas = document.getElementById("c");
+    var context = canvas.getContext("2d");
+
+    var draw = function(context, size, offset, whiteOnly) {
+      context.canvas.width = window.innerWidth;
+      context.canvas.height = window.innerHeight;
+
+      // Sets the background color and clears the canvas.
+      context.fillStyle = "lightgrey";
+      context.fillRect(0, 0, context.canvas.width, context.canvas.height);
+
+      var spacing = size * 0.05;
+      offset = size * offset;
+
+      for (var c = -1; c < context.canvas.width / (size + spacing); c++) {
+        for (var r = 0; r < context.canvas.height / (size + spacing); r++) {
+          context.fillStyle = !whiteOnly && c % 2 === 0 ? "black" : "white";
+          var x = c * (size + spacing) + offset * (r % 2);
+          var y = r * (size + spacing);
+          context.fillRect(x, y, size, size);
+        }
+      }
+    }
+
+    var size = DEFAULT_SIZE;
+    var offset = DEFAULT_OFFSET;
+    var whiteOnly = false;
+    draw(context, size, offset, whiteOnly);
+
+    var updateValue = function(id, value) {
+      var elem = document.getElementById(id);
+      if (elem) {
+        elem.innerHTML = Math.floor(value) + " px";
+      }
+    }
+
+    var offsetSlider = document.getElementById("offset");
+    if (offsetSlider) {
+      offsetSlider.onchange = function() {
+        offset = parseFloat(offsetSlider.value);
+        draw(context, size, offset, whiteOnly);
+        updateValue("offsetValue", offset * size);
+        _gaq.push(["_trackEvent", "cafeWallControls", "changeOffset",
+                   "offsetPercentage", offset * 100]);
+      }
+    }
+
+    var sizeSlider = document.getElementById("size");
+    if (sizeSlider) {
+      sizeSlider.onchange = function() {
+        size = parseInt(sizeSlider.value);
+        draw(context, size, offset, whiteOnly);
+        updateValue("sizeValue", size);
+        updateValue("offsetValue", offset * size);
+        _gaq.push(["_trackEvent", "cafeWallControls", "changeSize",
+                   "size", size]);
+      }
+    }
+
+    updateValue("offsetValue", offset * size);
+    updateValue("sizeValue", size);
+
+    var toggleLink = document.getElementById("toggle");
+    if (toggleLink) {
+      var updateToggleLink = function() {
+        toggleLink.innerHTML = whiteOnly ?
+          "Bring back the black boxes." :
+          "Turn black into white.";
+      }
+      updateToggleLink();
+      toggle.onclick = function() {
+        whiteOnly = !whiteOnly;
+        updateToggleLink();
+        draw(context, size, offset, whiteOnly);
+        _gaq.push(["_trackEvent", "cafeWallControls", "toggleBlackSquares",
+                   "blackSquareVisibility", Number(!whiteOnly)]);
+      }
+    }
+
+    window.onresize = function() {
+      draw(context, size, offset);
+    }
+  })();
+</script>
+
+
+    <script type="text/javascript">
+      (function() {
+        var isHidden = function(element) {
+          return element.style.display === "none";
+        }
+
+        var url = document.URL.split("#")[0];
+        var boxDisplayKey = url + ".box_display";
+
+        var toggle = document.getElementById("toggleBox");
+        var content = document.getElementById("content");
+        if (toggle && content) {
+          var state = window.localStorage.getItem(boxDisplayKey);
+          if (state !== null) {
+            content.style.display = state;
+          }
+
+          var updateToggleBoxLink = function() {
+            toggle.innerHTML = (isHidden(content) ?
+                "&laquo; Show the box." :
+                "Hide this box. &raquo;");
+          }
+          updateToggleBoxLink();
+
+          toggle.onclick = function() {
+            content.style.display = isHidden(content) ? "block" : "none";
+            window.localStorage.setItem(boxDisplayKey, content.style.display);
+            updateToggleBoxLink();
+            _gaq.push(["_trackEvent", "infoBox", "toggle", "isVisible",
+                       Number(isHidden(content))]);
+          }
+        }
+
+        // Don't show anything until the document is ready.
+        document.getElementsByTagName("body")[0].style.display = "block";
+      })();
+    </script>
+  </body>
+</html>
