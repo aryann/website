@@ -1,5 +1,14 @@
 #!/bin/bash
 
+set -o errexit
+
+rm -rf docs
+
 jekyll build --source=jekyll-site --destination=docs
 
-cp -r seam-carving-js/dist docs/seam-carving
+(
+    cd seam-carving-js
+    npm install
+    PROD=1 gulp build
+    cp -r dist ../docs/seam-carving
+)
