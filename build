@@ -8,6 +8,7 @@ jekyll build --source=jekyll-site --destination=docs
 
 (
     cd seam-carving-js
+    git pull
     npm install
     PROD=1 gulp build
     cp -r dist ../docs/seam-carving
