@@ -3,8 +3,6 @@
   <head>
     <meta charset="utf-8" />
     <meta name="author" content="Aryan Naraghi" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
     <title>{{ page.title }}</title>
     <link
       href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap"
@@ -38,7 +36,7 @@
         padding: 0 10px;
       }
 
-      @media only screen and (min-width: 600px) {
+      @media only screen and (min-width: 1080px) {
         .container {
           width: 600px;
         }
