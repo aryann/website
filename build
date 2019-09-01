@@ -2,14 +2,15 @@
 
 set -o errexit
 
-rm -rf docs
+#rm -rf docs
 
-jekyll build --source=jekyll-site --destination=docs
+#jekyll build --source=jekyll-site --destination=docs
 
 (
     cd seam-carving-js
     git pull
     npm install
     PROD=1 gulp build
+    rm -rf ../docs/seam-carving
     cp -r dist ../docs/seam-carving
 )
