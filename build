@@ -5,11 +5,13 @@ set -o errexit
 rm -rf docs
 
 jekyll build --source=jekyll-site --destination=docs
+cp -r apps docs
+cp CNAME docs
+
+git submodule update --init
 
 (
     cd seam-carving-js
-    git submodule init
-    git pull
     npm install
     PROD=1 gulp build
     rm -rf ../docs/seam-carving
