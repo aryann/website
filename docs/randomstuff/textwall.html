@@ -1,124 +1,99 @@
-<!doctype html>
-<html lang="end">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="author" content="Aryan Naraghi" />
-    <meta name="description" content="Aryan Naraghi's website" />
-    <title>Text wall</title>
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet" />
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <meta content="Aryan Naraghi" name="author"/>
+        <meta content="Aryan Naraghi's website" name="description"/>
+        <title>Text wall</title>
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet"/>
 
-    <style type="text/css">
-      html, body {
-        width: 100%;
-        height: 100%;
-        margin: 0;
-      }
+        <style>
+            html,
+            body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+            }
 
-      body {
-        display: none;
-        overflow: hidden;
-      }
+            body {
+                font-family: "Open Sans", sans-serif;
+                display: none;
+                overflow: hidden;
+            }
 
-      #box {
-        background-color: lightgoldenrodyellow;
-        border: 1px solid lightgrey;
-        bottom: 0;
-        position: absolute;
-        right: 0;
-        width: 420px;
-        z-index: 1;
-      }
+            #box {
+                background-color: lightgoldenrodyellow;
+                border: 1px solid lightgrey;
+                bottom: 0;
+                position: absolute;
+                right: 0;
+                width: 420px;
+                z-index: 1;
+            }
 
-      #content {
-        padding: 15px;
-      }
+            #content {
+                padding: 15px;
+            }
 
-      #content p {
-        margin-top: 0;
-      }
+            #content p {
+                margin-top: 0;
+            }
 
-      #button a {
-        display: block;
-        padding: 15px;
-        border-bottom: 1px solid lightgrey;
-      }
+            #button a {
+                display: block;
+                padding: 15px;
+                border-bottom: 1px solid lightgrey;
+            }
 
-      table {
-        border-collapse: separate;
-      }
+            table {
+                border-collapse: separate;
+            }
 
-      td {
-        padding: 15px;
-        padding-right: 0;
-      }
+            td {
+                padding: 15px 0 15px 15px;
+            }
 
-      th {
-        text-align: left;
-        padding: 15px;
-        padding-left: 0;
-        border-right: 1px solid lightgrey;
-      }
+            th {
+                text-align: left;
+                padding: 15px 15px 15px 0;
+                border-right: 1px solid lightgrey;
+            }
 
-      #c {
-        left: 0;
-        position: absolute;
-        top: 0;
-        z-index: 0;
-      }
+            #c {
+                left: 0;
+                position: absolute;
+                top: 0;
+                z-index: 0;
+            }
 
-      body {
-  font-family: "Open Sans", sans-serif;
-}
+            a {
+                color: blue;
+                text-decoration: none;
+            }
+        </style>
 
-a {
-  color: blue;
-  text-decoration: none;
-}
+        <script>
+    var _gaq = _gaq || [];
+    _gaq.push(["_setAccount", "UA-36868551-1"]);
+    _gaq.push(["_trackPageview"]);
 
-    </style>
+    (function () {
+        var ga = document.createElement("script");
+        ga.type = "text/javascript";
+        ga.async = true;
+        ga.src = (
+            "https:" == document.location.protocol
+                ? "https://ssl"
+                : "http://www"
+        ) + ".google-analytics.com/ga.js";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(ga, s);
+    })();
+</script>
+    </head>
 
-    <script type="text/javascript">
-      var _gaq = _gaq || [];
-_gaq.push(['_setAccount', 'UA-36868551-1']);
-_gaq.push(['_trackPageview']);
-
-(function() {
-  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-  ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-})();
-
-      var utils = {
-
-  // Returns a new 2D array with dimensions rows by cols. All cells
-  // will initially contain the value given by initVal.
-  create2DArray: function(rows, cols, initVal) {
-    var res = new Array(rows);
-    for (var row = 0; row < rows; row++) {
-      res[row] = new Array(cols);
-      for (var col = 0; col < cols; col++) {
-	res[row][col] = initVal;
-      }
-    }
-    return res;
-  },
-
-  // A Python-like mod.
-  mod: function(n, p) {
-    if (n < 0) {
-      return p + n % p;
-    } else {
-      return n % p;
-    }
-  },
-
-};
-
-    </script>
-  </head>
-
-  <body>
-    <style type="text/css">
+    <body>
+        <style type="text/css">
 
   pre {
     margin: 0;
@@ -246,42 +221,73 @@ _gaq.push(['_trackPageview']);
 </script>
 
 
-    <script type="text/javascript">
-      (function() {
-        var isHidden = function(element) {
-          return element.style.display === "none";
-        }
+        <script> 
+          var utils = {
+            // Returns a new 2D array with dimensions rows by cols. All cells
+            // will initially contain the value given by initVal.
+            create2DArray: function(rows, cols, initVal) {
+              var res = new Array(rows);
+              for (var row = 0; row < rows; row++) {
+                res[row] = new Array(cols);
+                for (var col = 0; col < cols; col++) {
+            res[row][col] = initVal;
+                }
+              }
+              return res;
+            },
 
-        var url = document.URL.split("#")[0];
-        var boxDisplayKey = url + ".box_display";
+            // A Python-like mod.
+            mod: function(n, p) {
+              if (n < 0) {
+                return p + n % p;
+              } else {
+                return n % p;
+              }
+            },
+          };
+        </script>
 
-        var toggle = document.getElementById("toggleBox");
-        var content = document.getElementById("content");
-        if (toggle && content) {
-          var state = window.localStorage.getItem(boxDisplayKey);
-          if (state !== null) {
-            content.style.display = state;
-          }
+        <script>
+           (function () {
+                var isHidden = function (element) {
+                    return element.style.display === "none";
+                }
 
-          var updateToggleBoxLink = function() {
-            toggle.innerHTML = (isHidden(content) ?
-                "&laquo; Show the box." :
-                "Hide this box. &raquo;");
-          }
-          updateToggleBoxLink();
+                var url = document.URL.split("#")[0];
+                var boxDisplayKey = url + ".box_display";
 
-          toggle.onclick = function() {
-            content.style.display = isHidden(content) ? "block" : "none";
-            window.localStorage.setItem(boxDisplayKey, content.style.display);
-            updateToggleBoxLink();
-            _gaq.push(["_trackEvent", "infoBox", "toggle", "isVisible",
-                       Number(isHidden(content))]);
-          }
-        }
+                var toggle = document.getElementById("toggleBox");
+                var content = document.getElementById("content");
+                if (toggle && content) {
+                    var state = window.localStorage.getItem(boxDisplayKey);
+                    if (state !== null) {
+                        content.style.display = state;
+                    }
 
-        // Don't show anything until the document is ready.
-        document.getElementsByTagName("body")[0].style.display = "block";
-      })();
-    </script>
-  </body>
+                    var updateToggleBoxLink = function () {
+                        toggle.innerHTML = (
+                            isHidden(content)
+                                ? "&laquo; Show the box."
+                                : "Hide this box. &raquo;"
+                        );
+                    }
+                    updateToggleBoxLink();
+
+                    toggle.onclick = function () {
+                        content.style.display = isHidden(content)
+                            ? "block"
+                            : "none";
+                        window.localStorage.setItem(boxDisplayKey, content.style.display);
+                        updateToggleBoxLink();
+                        _gaq.push([
+                            "_trackEvent", "infoBox", "toggle", "isVisible", Number(isHidden(content))
+                        ]);
+                    }
+                }
+
+                // Do not show anything until the document is ready.
+                document.getElementsByTagName("body")[0].style.display = "block";
+            })(); 
+        </script>
+    </body>
 </html>

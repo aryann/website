@@ -1,38 +1,44 @@
 <!doctype html>
 <html>
-  <head>
-    <title>Showy</title>
-    <meta charset="utf-8" />
+    <head>
+        <title>Showy</title>
+        <meta charset="utf-8"/>
 
-    <style type="text/css">
-      #c {
-        display: block;
-        margin: 0 auto;
-      }
+        <style type="text/css">
+            #c {
+                display: block;
+                margin: 0 auto;
+            }
 
-      #loading {
-        text-align: center;
-      }
-    </style>
+            #loading {
+                text-align: center;
+            }
+        </style>
 
-    <script>
-      var _gaq = _gaq || [];
-_gaq.push(['_setAccount', 'UA-36868551-1']);
-_gaq.push(['_trackPageview']);
+        <script>
+    var _gaq = _gaq || [];
+    _gaq.push(["_setAccount", "UA-36868551-1"]);
+    _gaq.push(["_trackPageview"]);
 
-(function() {
-  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-  ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-})();
+    (function () {
+        var ga = document.createElement("script");
+        ga.type = "text/javascript";
+        ga.async = true;
+        ga.src = (
+            "https:" == document.location.protocol
+                ? "https://ssl"
+                : "http://www"
+        ) + ".google-analytics.com/ga.js";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(ga, s);
+    })();
+</script>
+    </head>
 
-    </script>
-  </head>
+    <body>
+        <p id="loading">Loading images... Patience is bitter, but its fruit is sweet.</p>
 
-  <body>
-    <p id="loading">Loading images... Patience is bitter, but its fruit is sweet.</p>
-
-    <canvas id="c">
+        <canvas id="c">
   <p>
     It looks like your browser
     lacks <a href="http://en.wikipedia.org/wiki/Canvas_element">canvas</a>
@@ -41,7 +47,7 @@ _gaq.push(['_trackPageview']);
 </canvas>
 
 
-    <script>
+        <script>
       (function() {
         var NUM_IMAGES = 123;
         var TIME_BETWEEN_IMAGES_MILLIS = 50;
@@ -75,5 +81,5 @@ _gaq.push(['_trackPageview']);
         window.setInterval(changeImage, TIME_BETWEEN_IMAGES_MILLIS);
       })();
     </script>
-  </body>
+    </body>
 </html>
