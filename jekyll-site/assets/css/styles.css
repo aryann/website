@@ -96,7 +96,7 @@ pre {
   border-left: 3px solid blue;
   background-color: #f8f8f8;
   padding: 1em;
-  border: 1px solid rgba(0, 0, 0, 0.125);
+  border: 1px solid lightgrey;
   border-radius: 0.25rem;
   overflow-x: auto;
 }
@@ -116,6 +116,15 @@ a {
 a:hover {
   color: purple;
   border-color: purple;
+}
+
+h1 a {
+  color: inherit;
+  border: inherit;
+}
+
+h1 a:hover {
+  color: inherit;
 }
 
 .selected-link {
