@@ -31,8 +31,7 @@ h3,
 h4,
 h5,
 h6 {
-  margin-top: 1em;
-  padding-top: 1em;
+  margin-top: 2em;
 }
 
 header {
@@ -87,14 +86,12 @@ nav li:last-child {
   }
 }
 
+blockquote,
 figure {
   margin: 0;
 }
 
-code {
-  padding: 2px 4px;
-}
-
+blockquote,
 pre {
   border-left: 3px solid blue;
   background-color: #f8f8f8;
@@ -102,6 +99,12 @@ pre {
   border: 1px solid rgba(0, 0, 0, 0.125);
   border-radius: 0.25rem;
   overflow-x: auto;
+}
+
+blockquote {
+  background-color: lightgoldenrodyellow;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
 a {
@@ -117,4 +120,8 @@ a:hover {
 
 .selected-link {
   border-bottom: 2px solid blue;
+}
+
+time {
+  color: grey;
 }

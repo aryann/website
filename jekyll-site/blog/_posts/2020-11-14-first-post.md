@@ -1,7 +1,9 @@
 ---
-layout: main
+layout: post
 title: My First Blog Post
 ---
+
+## Sample Header
 
 Example code:
 
