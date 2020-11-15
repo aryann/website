@@ -1,0 +1,25 @@
+{% assign url = "https://www.aryan.app" %}
+{% assign description = 
+    "Aryan Naraghi's personal website. Aryan Naraghi is a software engineer from Seattle who works at Google." %}
+
+<link rel="canonical" href="{{ url }}" />
+
+<meta property="og:title" content="Aryan Naraghi's personal website" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="{{ url }}" />
+<meta property="og:description" content="{{ description }}" />
+<meta property="description" content="{{ description }}" />
+
+<script type="application/ld+json">
+    {
+      "@type": "WebSite",
+      "url": {{ url }}",
+      "author": {
+        "@type": "Person",
+        "name": "Aryan Naraghi",
+        "email": "aryan.naraghi@gmail.com",
+        "url": "{{ url }}"
+      },
+      "@context": "https://schema.org"
+    }
+  </script>
