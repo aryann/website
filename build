@@ -1,12 +1,14 @@
 #!/bin/bash
 
 set -o errexit
+set -o nounset
+set -o xtrace
 
-rm -rf docs
+DEST="$(mktemp --directory)"
 
-jekyll build --source=jekyll-site --destination=docs
-cp -r apps docs
-cp CNAME docs
+jekyll build --source=jekyll-site --destination="${DEST}"
+cp -r apps "${DEST}"
+cp CNAME "${DEST}"
 
 git submodule update --init
 
@@ -14,6 +16,8 @@ git submodule update --init
     cd seam-carving-js
     npm install
     PROD=1 gulp build
-    rm -rf ../docs/seam-carving
-    cp -r dist ../docs/seam-carving
+    cp -r dist "${DEST}/seam-carving"
 )
+
+rm --force --recursive docs
+mv ${DEST} docs
