@@ -1,0 +1,9 @@
+#!/bin/bash
+
+set -o errexit
+set -o nounset
+set -o xtrace
+
+DEST="$(mktemp --directory)"
+
+jekyll serve --source=jekyll-site --destination="${DEST}" --incremental --watch
