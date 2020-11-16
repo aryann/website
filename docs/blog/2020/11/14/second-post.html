@@ -7,12 +7,12 @@
         <meta charset="utf-8"/>
         <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 
-        <title>My First Blog Post</title>
+        <title>My Second Blog Post</title>
 
         
 
 
-<link rel="canonical" href="https://www.aryan.app/2020/11/14/first-post.html" />
+<link rel="canonical" href="https://www.aryan.app/blog/2020/11/14/second-post.html" />
 
 <meta property="og:title" content="Aryan Naraghi's personal website" />
 <meta property="og:locale" content="en_US" />
@@ -36,39 +36,41 @@
     }
   </script>
 
-        <script>
-    var _gaq = _gaq || [];
-    _gaq.push(["_setAccount", "UA-36868551-1"]);
-    _gaq.push(["_trackPageview"]);
-
-    (function () {
-        var ga = document.createElement("script");
-        ga.type = "text/javascript";
-        ga.async = true;
-        ga.src = (
-            "https:" == document.location.protocol
-                ? "https://ssl"
-                : "http://www"
-        ) + ".google-analytics.com/ga.js";
-        var s = document.getElementsByTagName("script")[0];
-        s.parentNode.insertBefore(ga, s);
-    })();
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-36868551-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'UA-36868551-1');
 </script>
+
     </head>
 
     <body>
         <header>
             <div>
-                <h1>Aryan Naraghi</h1>
+                <h1>
+                    <a href="/">Aryan Naraghi</a>
+                </h1>
                 <nav>
     <ul>
         
             <li>
-                <a href="/">Home</a>
+                <a href="/" >
+                    Home
+                </a>
             </li>
         
             <li>
-                <a href="/projects/">Projects</a>
+                <a href="/blog/"  class="selected-link" >
+                    Blog
+                </a>
+            </li>
+        
+            <li>
+                <a href="/projects/" >
+                    Projects
+                </a>
             </li>
         
     </ul>
@@ -78,11 +80,22 @@
         </header>
 
         <main>
-            <h1>My First Blog Post</h1>
-            <p>Example code:</p>
+            <h1>My Second Blog Post</h1>
+            <time datetime="2020-11-14 00:00:00 -0800">14 November 2020</time>
+
+
+<h2 id="sample-header">Sample Header</h2>
+
+<p>Example code:</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">echo</span> <span class="s2">"Hello, world!"</span>
 </code></pre></div></div>
+
+<blockquote>
+  <p>ASIDE: Example blockquote. hello.</p>
+
+  <p>Another paragraph.</p>
+</blockquote>
 
         </main>
     </body>
