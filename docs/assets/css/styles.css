@@ -22,7 +22,7 @@ main {
   margin: 0 auto;
   max-width: 50em;
   line-height: 1.8;
-  padding: 0 1em 4em 1em;
+  padding: 0 2em 4em 2em;
 }
 
 h1,
@@ -46,7 +46,7 @@ header {
 header div {
   max-width: 50em;
   margin: 0 auto;
-  padding: 0 1em;
+  padding: 0 2em;
   display: grid;
   grid-template-columns: 70% 30%;
 }
