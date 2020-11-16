@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <link href="/assets/css/styles.css" rel="stylesheet">
+        <link href="/assets/css/code.css" rel="stylesheet">
+
+        <meta charset="utf-8"/>
+        <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+
+        <title>Data Serialization: A Roadmap</title>
+
+        
+
+
+<link rel="canonical" href="https://www.aryan.app/blog/2020/11/14/data-serialization-roadmap.html" />
+
+<meta property="og:title" content="Aryan Naraghi's personal website" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="https://www.aryan.app" />
+<meta property="og:description" content="Aryan Naraghi's personal website. Aryan Naraghi is a software engineer from Seattle who works at Google." />
+
+<meta name="author" content="Aryan Naraghi" />
+<meta name="description" content="Aryan Naraghi's personal website. Aryan Naraghi is a software engineer from Seattle who works at Google." />
+
+<script type="application/ld+json">
+    {
+      "@type": "WebSite",
+      "url": https://www.aryan.app",
+      "author": {
+        "@type": "Person",
+        "name": "Aryan Naraghi",
+        "email": "aryan.naraghi@gmail.com",
+        "url": "https://www.aryan.app"
+      },
+      "@context": "https://schema.org"
+    }
+  </script>
+
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-36868551-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'UA-36868551-1');
+</script>
+
+    </head>
+
+    <body>
+        <header>
+            <div>
+                <h1>
+                    <a href="/">Aryan Naraghi</a>
+                </h1>
+                <nav>
+    <ul>
+        
+            <li>
+                <a href="/" >
+                    Home
+                </a>
+            </li>
+        
+            <li>
+                <a href="/blog/"  class="selected-link" >
+                    Blog
+                </a>
+            </li>
+        
+            <li>
+                <a href="/projects/" >
+                    Projects
+                </a>
+            </li>
+        
+    </ul>
+</nav>
+
+            </div>
+        </header>
+
+        <main>
+            <h1>Data Serialization: A Roadmap</h1>
+            <p>
+    <time datetime="2020-11-14 00:00:00 -0800">14 November 2020</time>
+</p>
+
+
+<p>This blog series provides a hands-on overview of data serialization. We start by
+explaining what data serialization is and what it’s used for. We then cover an
+assortment of popular data serialization formats and their trade-offs. We round
+off the exploration by implementing a library for the Bencode data serialization
+format which is used by the popular peer-to-peer file sharing system BitTorrent.</p>
+
+<h2 id="learning-objectives">Learning Objectives</h2>
+
+<p>By the time you are done reading this series, you can expect to:</p>
+
+<ul>
+  <li>Understand data serialization and its use-cases.</li>
+  <li>Gain familiarity with an assortment of popular serialization formats. We will
+cover JSON, YAML, Protocol Buffers, Cap’n Proto, Apache Avro, Apache Arrow,
+and Bencode.</li>
+  <li>Become adept at choosing a serialization format based on the problem space and
+the trade-offs each format makes.</li>
+  <li>Experience what it takes to implement a data serialization library for a
+simple format, Bencode.</li>
+</ul>
+
+<h2 id="target-audience">Target Audience</h2>
+
+<p>This series is intended for readers new to data serialization as well as those
+who have some experience. For the latter group, we hope this series provides a
+broader exposure to the topic and some hands-on experience.</p>
+
+<h2 id="prerequisites">Prerequisites</h2>
+
+<p>We assume the reader is proficient in at least one programming language and has
+familiarity with the following topics:</p>
+
+<ul>
+  <li>statically- versus dynamically-typed languages;</li>
+  <li>the
+<a href="https://en.wikipedia.org/wiki/Client%E2%80%93server_model">client-server model</a>;
+and</li>
+  <li><a href="https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol">Hypertext Transfer Protocol (HTTP)</a>.</li>
+</ul>
+
+<p>Throughout the series we include code snippets from many programming languages.
+The reader need not know every language presented. Most of the examples are
+constructed to be self-explanatory.</p>
+
+<p>We will discuss some issues around performance. It is helpful for the reader to
+have some knowledge of computer architecture, however, this is not a
+requirement. We provide links to learning resources as appropriate.</p>
+
+<p>The implementation of a library for the Bencode format is done in Go. We assume
+the reader does not know Go ahead of time.</p>
+
+<h2 id="the-series">The Series</h2>
+
+<p>For reference, this section lists all posts in the series. Each post builds upon
+the preceding one, so we recommend reading them in order. Readers who already
+have experience with the topic may find it helpful to skip certain sections.</p>
+
+<ul>
+  <li><a href="/blog/2020/11/15/data-serialization-introduction.html">Data Serialization:
+Introduction</a></li>
+  <li>… more posts are coming soon. Watch this space!</li>
+</ul>
+
+<h2 id="next">Next</h2>
+
+<p>Continue on by reading <a href="/blog/2020/11/15/data-serialization-introduction.html">Data Serialization:
+Introduction</a>.</p>
+
+        </main>
+    </body>
+</html>

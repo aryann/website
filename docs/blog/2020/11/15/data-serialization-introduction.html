@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <link href="/assets/css/styles.css" rel="stylesheet">
+        <link href="/assets/css/code.css" rel="stylesheet">
+
+        <meta charset="utf-8"/>
+        <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+
+        <title>Data Serialization: Introduction</title>
+
+        
+
+
+<link rel="canonical" href="https://www.aryan.app/blog/2020/11/15/data-serialization-introduction.html" />
+
+<meta property="og:title" content="Aryan Naraghi's personal website" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="https://www.aryan.app" />
+<meta property="og:description" content="Aryan Naraghi's personal website. Aryan Naraghi is a software engineer from Seattle who works at Google." />
+
+<meta name="author" content="Aryan Naraghi" />
+<meta name="description" content="Aryan Naraghi's personal website. Aryan Naraghi is a software engineer from Seattle who works at Google." />
+
+<script type="application/ld+json">
+    {
+      "@type": "WebSite",
+      "url": https://www.aryan.app",
+      "author": {
+        "@type": "Person",
+        "name": "Aryan Naraghi",
+        "email": "aryan.naraghi@gmail.com",
+        "url": "https://www.aryan.app"
+      },
+      "@context": "https://schema.org"
+    }
+  </script>
+
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-36868551-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'UA-36868551-1');
+</script>
+
+    </head>
+
+    <body>
+        <header>
+            <div>
+                <h1>
+                    <a href="/">Aryan Naraghi</a>
+                </h1>
+                <nav>
+    <ul>
+        
+            <li>
+                <a href="/" >
+                    Home
+                </a>
+            </li>
+        
+            <li>
+                <a href="/blog/"  class="selected-link" >
+                    Blog
+                </a>
+            </li>
+        
+            <li>
+                <a href="/projects/" >
+                    Projects
+                </a>
+            </li>
+        
+    </ul>
+</nav>
+
+            </div>
+        </header>
+
+        <main>
+            <h1>Data Serialization: Introduction</h1>
+            <p>
+    <time datetime="2020-11-15 00:00:00 -0800">15 November 2020</time>
+</p>
+
+
+<p>This post is part of a series on data serialization. If you haven’t already,
+take a look at <a href="/blog/2020/11/14/data-serialization-roadmap.html">Data Serialization: A
+Roadmap</a> before
+reading this post.</p>
+
+<p>In this post, we explain what data serialization is and what it’s used for.
+We’ll begin with an example, followed by a generalized definition.</p>
+
+<h2 id="an-example">An Example</h2>
+
+<p>Suppose you are building a status sharing application, similar to Twitter. Each
+user has a profile page that lists a timeline of their status updates. Users can
+view profile pages and post status updates through a web frontend, an iOS app,
+or an Android app. We refer to the web frontend and the mobile apps as clients.</p>
+
+<p>A status update contains three fields of data: the message, the time of the
+update, and the user’s location, given as a pair of latitude and longitude.
+Since our application facilitates sharing of status updates, we must have a
+central source of truth. An HTTP server acts as this central source. Clients
+contact the server to fetch status updates and post new ones.</p>
+
+<p>Because clients are implemented in different programming languages and operate
+on a variety of platforms, we need a common format for clients and the server to
+communicate.</p>
+
+<p>HTTP already handles the details of transporting data. Consider the case of
+posting a new status update. To post a new update, let’s assume that a client
+sends an HTTP POST request to the <code class="language-plaintext highlighter-rouge">/profiles/me/statuses</code> endpoint on the
+server. The body of this request contains the status update. We’ll refer to the
+body as the payload. Here’s what a request may look like:</p>
+
+<div class="language-http highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">POST</span> <span class="nn">/profiles/me/statuses</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">mystatussharingapp.example.com</span>
+<span class="na">Content-Type</span><span class="p">:</span> <span class="s">text/plain</span>
+<span class="na">Authorization</span><span class="p">:</span> <span class="s">...</span>
+<span class="s">...</span>
+
+&lt;payload&gt;
+</code></pre></div></div>
+
+<p>Let’s now turn to how the payload is created. Suppose the web frontend is
+implemented in TypeScript with the following class definition for a status
+update:</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nx">StatusUpdate</span> <span class="p">{</span>
+  <span class="k">readonly</span> <span class="nx">message</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
+  <span class="k">readonly</span> <span class="nx">timestamp</span><span class="p">:</span> <span class="nb">Date</span><span class="p">;</span>
+  <span class="k">readonly</span> <span class="nx">location</span><span class="p">:</span> <span class="nx">Location</span><span class="p">;</span>
+
+  <span class="kd">constructor</span><span class="p">(</span><span class="nx">message</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">timestamp</span><span class="p">:</span> <span class="nb">Date</span><span class="p">,</span> <span class="nx">location</span><span class="p">:</span> <span class="nx">Location</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// ...</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Similarly, the Android app is implemented in Java with status updates
+represented using a class as follows:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">StatusUpdate</span> <span class="o">{</span>
+  <span class="kd">private</span> <span class="kd">final</span> <span class="nc">String</span> <span class="n">message</span><span class="o">;</span>
+  <span class="kd">private</span> <span class="kd">final</span> <span class="nc">Date</span> <span class="n">timestamp</span><span class="o">;</span>
+  <span class="kd">private</span> <span class="kd">final</span> <span class="nc">Location</span> <span class="n">location</span><span class="o">;</span>
+
+  <span class="kd">public</span> <span class="nf">StatusUpdate</span><span class="o">(</span><span class="nc">String</span> <span class="n">message</span><span class="o">,</span> <span class="nc">Date</span> <span class="n">timestamp</span><span class="o">,</span> <span class="nc">Location</span> <span class="n">location</span><span class="o">)</span> <span class="o">{</span>
+    <span class="c1">// ...</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>When clients create new instances of these objects, each client will have its
+own platform-dependent way of representing the underlying data in memory. It
+would be infeasible to teach the server about each platform-dependent format, so
+we need a common, platform-independent way of constructing the payload that is
+placed in the status update HTTP POST request. Let’s see how we can construct a
+platform-independent payload.</p>
+
+<h3 id="newline-delimited-format">Newline-Delimited Format</h3>
+
+<p>We’ll name our first proposal the <strong>newline-delimited format</strong>. We will place
+each field of the status update on its own line, starting with the message. For
+example, suppose we have a status update with the message “Hello, world!”,
+created on November 13, 2020 from Seattle. Here’s how the payload is
+constructed:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Hello, world!
+2020-11-13T19:05:15Z
+47.637087,-122.334543
+</code></pre></div></div>
+
+<p>Both the web frontend and the Android app can produce payloads that look like
+the above, even though their status update representations vary. This is our
+first example of data serialization, which gives us a platform-independent way
+of representing data structures. Note that the payload in the above example is a
+sequence of bits that happens to also be a human-readable string.</p>
+
+<p>While the newline-delimited scheme works, it is brittle. All client and server
+code must adhere to a strict (and arbitrary) ordering of data when encoding and
+decoding payloads. For example, if a client reorders the timestamp and location,
+then a server will be unable to parse the payload correctly:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Hello, world!
+47.637087,-122.334543
+2020-11-13T19:05:15Z
+</code></pre></div></div>
+
+<p>Optional fields are also tricky. Suppose we want to make the location optional
+and introduce the ability to reply to an existing status by including a link to
+the subject status. This now leads to potential payloads like:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>I'm a status message without a location.
+2020-11-13T19:05:15Z
+</code></pre></div></div>
+
+<p>Or:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>I'm a reply to a friend's status. I include my location.
+2020-11-13T19:05:15Z
+47.637087,-122.334543
+/profiles/my-friend/statuses/1
+</code></pre></div></div>
+
+<p>Or:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>I'm a reply to a friend's status. I do not include my location.
+2020-11-13T19:05:15Z
+/profiles/my-friend/statuses/1
+</code></pre></div></div>
+
+<p>It quickly becomes difficult for the server to figure out which line corresponds
+to which piece of data. For example, if a location is included, the subject
+status link appears on the fourth line. Without a location, the subject status
+link appears on the third line.</p>
+
+<p>For this contrived example, the server can sniff the contents of each line to
+tell what it contains, but this is not a scalable solution. This regime will
+break if we introduce additional fields that are optional and have the same
+type. For example, suppose we allow for two types of optional locations: the
+location as reported by the user’s phone as well as the location selected by the
+user. If a payload contains a single location, how can the server tell what type
+of location it is given?</p>
+
+<blockquote>
+  <p><strong>Note:</strong> The example of collecting the user’s location as reported by their
+phone as well as by the user may seem peculiar for a status-sharing app. There
+are more practical use-cases in other domains. For example, this practice can
+be helpful for a ride-hailing app where the accuracy of the phone’s location
+data may be low or where the user plans to walk to a desired pick-up location.</p>
+</blockquote>
+
+<p>It’s clear that the newline-delimited format is inflexible. Further, this format
+does not abide by the
+<a href="https://en.wikipedia.org/wiki/Robustness_principle">robustness principle</a>. That
+is, being conservative in what the client sends and liberal in what the server
+accepts.</p>
+
+<h3 id="key-value-format">Key-Value Format</h3>
+
+<p>Let’s design a more robust solution. What if we prefixed each field with a key
+followed by an equals sign? We’ll refer to this as the <strong>key-value format</strong>.
+Consider this example:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>StatusMessage=Hello, world!
+LocationAsReportedByDevice=47.637087,-122.334543
+LocationAsReportedByUser=47.627577,-122.336694
+Timestamp=2020-11-13T19:05:15Z
+</code></pre></div></div>
+
+<p>Or this one which omits all location data:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>StatusMessage=Hello, world! I lack location data!
+Timestamp=2020-11-13T19:05:15Z
+</code></pre></div></div>
+
+<p>As with the earlier examples, these payloads are also just sequences of bits,
+which happen to also be human-readable strings. Now the server can look at the
+keys to make sense of the payload. Supporting optional fields does not require
+complex logic on the server’s part. Additionally, the key-value format makes the
+payload human-readable, which is a desirable property for debuggability (though
+not necessarily for performance; more on this in a future post).</p>
+
+<p>We’ve now covered two ways of constructing status update payloads: the
+newline-delimited format and the key-value format. While these examples are
+contrived and should not be used in practice due to the availability of better
+approaches we will cover shortly, the examples allow a gentle introduction to
+what can be a complex topic. We are now ready for a generalized definition of
+data serialization.</p>
+
+<h2 id="a-generalized-definition">A Generalized Definition</h2>
+
+<p><strong>Data serialization</strong> is the process of translating an in-memory data structure
+into a sequence of platform-independent bits that can be used for transport and
+storage. <strong>Data deserialization</strong> is the reverse: reading back into memory a
+data structure from its serialized bits.</p>
+
+<p>In our example, the status updates are serialized by clients to support
+transport to the server. The server performs the reverse operation when it
+receives the POST request.</p>
+
+<p>We did not cover storage, but the story is the same: when the server saves
+status updates to persistent storage, it must again serialize the data to a
+format appropriate for the storage system.</p>
+
+<blockquote>
+  <p><strong>Note:</strong> An HTTP message, like the POST request we surveyed earlier, is
+itself a serialization format. In our example, we actually showcased two
+levels of serialization: one for the status update and one for the HTTP POST
+request. Using a novel example makes it easier to demonstrate the
+considerations a serialization format has to make.</p>
+
+  <p>Learning more about
+<a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Messages">HTTP messages</a>
+can be a good supplement to this series.</p>
+
+  <p>Also note that placing one serialized format into another is a fairly common
+pattern. A prevalent use of this technique is found in computer networking.
+For example, an HTTP message is often placed inside of a
+<a href="https://en.wikipedia.org/wiki/Transmission_Control_Protocol#TCP_segment_structure">TCP segment</a>,
+which is often placed inside an
+<a href="https://en.wikipedia.org/wiki/IPv4#Packet_structure">IPv4 packet</a>, which is
+placed inside yet another packet at the
+<a href="https://en.wikipedia.org/wiki/Link_layer">link layer</a>. Studying computer
+networking can also be a good supplement to this series. We recommend
+<a href="https://www.coursera.org/learn/computer-networking">the Bits and Bytes of Computer Networking</a>,
+a course offered by Google on Coursera.</p>
+</blockquote>
+
+<h2 id="next">Next</h2>
+
+<p>Armed with a definition of data serialization, we can now dive in and explore an
+assortment of popular data serialization formats along with the trade-offs at
+play. Stay tuned for the upcoming blog posts!</p>
+
+        </main>
+    </body>
+</html>
