@@ -22,7 +22,7 @@ main {
   margin: 0 auto;
   max-width: 50em;
   line-height: 1.8;
-  padding: 0 2em 4em 2em;
+  padding: 0 1em 4em 1em;
 }
 
 h1,
@@ -46,7 +46,7 @@ header {
 header div {
   max-width: 50em;
   margin: 0 auto;
-  padding: 0 2em;
+  padding: 0 1em;
   display: grid;
   grid-template-columns: 70% 30%;
 }
@@ -93,6 +93,7 @@ nav li:last-child {
 blockquote,
 figure {
   margin-left: 0;
+  margin-right: 0;
 }
 
 blockquote,
