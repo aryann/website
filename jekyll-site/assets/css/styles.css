@@ -90,13 +90,12 @@ nav li:last-child {
   }
 }
 
-blockquote,
 figure {
   margin-left: 0;
   margin-right: 0;
 }
 
-blockquote,
+aside,
 pre {
   border-left: 3px solid blue;
   background-color: #f8f8f8;
@@ -107,13 +106,13 @@ pre {
   margin-bottom: 2em;
 }
 
-blockquote {
+aside {
   background-color: lightgoldenrodyellow;
   padding-top: 0;
   padding-bottom: 0;
 }
 
-blockquote p:last-child {
+aside p:last-child {
   margin-bottom: 1em;
 }
 

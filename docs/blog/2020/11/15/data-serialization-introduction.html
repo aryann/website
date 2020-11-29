@@ -228,13 +228,13 @@ location as reported by the user’s phone as well as the location selected by t
 user. If a payload contains a single location, how can the server tell what type
 of location it is given?</p>
 
-<blockquote>
-  <p><strong>Note:</strong> The example of collecting the user’s location as reported by their
+<aside>
+  <p>The example of collecting the user’s location as reported by their
 phone as well as by the user may seem peculiar for a status-sharing app. There
 are more practical use-cases in other domains. For example, this practice can
 be helpful for a ride-hailing app where the accuracy of the phone’s location
 data may be low or where the user plans to walk to a desired pick-up location.</p>
-</blockquote>
+</aside>
 
 <p>It’s clear that the newline-delimited format is inflexible. Further, this format
 does not abide by the
@@ -289,20 +289,20 @@ receives the POST request.</p>
 status updates to persistent storage, it must again serialize the data to a
 format appropriate for the storage system.</p>
 
-<blockquote>
-  <p><strong>Note:</strong> An HTTP message, like the POST request we surveyed earlier, is
+<aside>
+  <p>An HTTP message, like the POST request we surveyed earlier, is
 itself a serialization format. In our example, we actually showcased two
 levels of serialization: one for the status update and one for the HTTP POST
 request. Using a novel example makes it easier to demonstrate the
 considerations a serialization format has to make.</p>
 
   <p>Learning more about
-<a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Messages">HTTP messages</a>
-can be a good supplement to this series.</p>
+<a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Messages">HTTP messages</a> can
+be a good supplement to this series.</p>
 
   <p>Also note that placing one serialized format into another is a fairly common
-pattern. A prevalent use of this technique is found in computer networking.
-For example, an HTTP message is often placed inside of a
+pattern. A prevalent use of this technique is found in computer networking. For
+example, an HTTP message is often placed inside of a
 <a href="https://en.wikipedia.org/wiki/Transmission_Control_Protocol#TCP_segment_structure">TCP segment</a>,
 which is often placed inside an
 <a href="https://en.wikipedia.org/wiki/IPv4#Packet_structure">IPv4 packet</a>, which is
@@ -311,7 +311,8 @@ placed inside yet another packet at the
 networking can also be a good supplement to this series. We recommend
 <a href="https://www.coursera.org/learn/computer-networking">the Bits and Bytes of Computer Networking</a>,
 a course offered by Google on Coursera.</p>
-</blockquote>
+
+</aside>
 
 <h2 id="next">Next</h2>
 

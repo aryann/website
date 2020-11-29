@@ -152,11 +152,13 @@ location as reported by the user's phone as well as the location selected by the
 user. If a payload contains a single location, how can the server tell what type
 of location it is given?
 
-> **Note:** The example of collecting the user's location as reported by their
-> phone as well as by the user may seem peculiar for a status-sharing app. There
-> are more practical use-cases in other domains. For example, this practice can
-> be helpful for a ride-hailing app where the accuracy of the phone's location
-> data may be low or where the user plans to walk to a desired pick-up location.
+<aside markdown="1">
+The example of collecting the user's location as reported by their
+phone as well as by the user may seem peculiar for a status-sharing app. There
+are more practical use-cases in other domains. For example, this practice can
+be helpful for a ride-hailing app where the accuracy of the phone's location
+data may be low or where the user plans to walk to a desired pick-up location.
+</aside>
 
 It's clear that the newline-delimited format is inflexible. Further, this format
 does not abide by the
@@ -213,27 +215,30 @@ We did not cover storage, but the story is the same: when the server saves
 status updates to persistent storage, it must again serialize the data to a
 format appropriate for the storage system.
 
-> **Note:** An HTTP message, like the POST request we surveyed earlier, is
-> itself a serialization format. In our example, we actually showcased two
-> levels of serialization: one for the status update and one for the HTTP POST
-> request. Using a novel example makes it easier to demonstrate the
-> considerations a serialization format has to make.
->
-> Learning more about
-> [HTTP messages](https://developer.mozilla.org/en-US/docs/Web/HTTP/Messages)
-> can be a good supplement to this series.
->
-> Also note that placing one serialized format into another is a fairly common
-> pattern. A prevalent use of this technique is found in computer networking.
-> For example, an HTTP message is often placed inside of a
-> [TCP segment](https://en.wikipedia.org/wiki/Transmission_Control_Protocol#TCP_segment_structure),
-> which is often placed inside an
-> [IPv4 packet](https://en.wikipedia.org/wiki/IPv4#Packet_structure), which is
-> placed inside yet another packet at the
-> [link layer](https://en.wikipedia.org/wiki/Link_layer). Studying computer
-> networking can also be a good supplement to this series. We recommend
-> [the Bits and Bytes of Computer Networking](https://www.coursera.org/learn/computer-networking),
-> a course offered by Google on Coursera.
+<aside markdown="1">
+An HTTP message, like the POST request we surveyed earlier, is
+itself a serialization format. In our example, we actually showcased two
+levels of serialization: one for the status update and one for the HTTP POST
+request. Using a novel example makes it easier to demonstrate the
+considerations a serialization format has to make.
+
+Learning more about
+[HTTP messages](https://developer.mozilla.org/en-US/docs/Web/HTTP/Messages) can
+be a good supplement to this series.
+
+Also note that placing one serialized format into another is a fairly common
+pattern. A prevalent use of this technique is found in computer networking. For
+example, an HTTP message is often placed inside of a
+[TCP segment](https://en.wikipedia.org/wiki/Transmission_Control_Protocol#TCP_segment_structure),
+which is often placed inside an
+[IPv4 packet](https://en.wikipedia.org/wiki/IPv4#Packet_structure), which is
+placed inside yet another packet at the
+[link layer](https://en.wikipedia.org/wiki/Link_layer). Studying computer
+networking can also be a good supplement to this series. We recommend
+[the Bits and Bytes of Computer Networking](https://www.coursera.org/learn/computer-networking),
+a course offered by Google on Coursera.
+
+</aside>
 
 ## Next
 
