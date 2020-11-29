@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <link href="/assets/css/styles.css" rel="stylesheet">
+        <link href="/assets/css/code.css" rel="stylesheet">
+
+        <meta charset="utf-8">
+        <meta content="width=device-width, initial-scale=1.0" name="viewport">
+        <meta content="aliceblue" name="theme-color">
+
+        <title>Data Serialization: JSON</title>
+
+        
+
+
+<link rel="canonical" href="https://www.aryan.app/blog/2020/11/29/data-serialization-json.html">
+
+<meta property="og:title" content="Aryan Naraghi's personal website">
+<meta property="og:locale" content="en_US">
+<meta property="og:url" content="https://www.aryan.app">
+<meta property="og:description" content="Aryan Naraghi's personal website. Aryan Naraghi is a software engineer from Seattle who works at Google.">
+
+<meta name="author" content="Aryan Naraghi">
+<meta name="description" content="Aryan Naraghi's personal website. Aryan Naraghi is a software engineer from Seattle who works at Google.">
+
+<script type="application/ld+json">
+    {
+      "@type": "WebSite",
+      "url": https://www.aryan.app",
+      "author": {
+        "@type": "Person",
+        "name": "Aryan Naraghi",
+        "email": "aryan.naraghi@gmail.com",
+        "url": "https://www.aryan.app"
+      },
+      "@context": "https://schema.org"
+    }
+  </script>
+
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-36868551-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'UA-36868551-1');
+</script>
+
+    </head>
+
+    <body>
+        <header>
+            <div>
+                <h1>
+                    <a href="/">Aryan Naraghi</a>
+                </h1>
+                <nav>
+    <ul>
+        
+            <li>
+                <a href="/" >
+                    Home
+                </a>
+            </li>
+        
+            <li>
+                <a href="/blog/"  class="selected-link" >
+                    Blog
+                </a>
+            </li>
+        
+            <li>
+                <a href="/projects/" >
+                    Projects
+                </a>
+            </li>
+        
+    </ul>
+</nav>
+
+            </div>
+        </header>
+
+        <main>
+            <h1>Data Serialization: JSON</h1>
+            <p>
+    <time datetime="2020-11-29 00:00:00 -0800">29 November 2020</time>
+</p>
+
+
+<p>This post is part of a series on data serialization. If you haven’t already,
+take a look at <a href="/blog/2020/11/14/data-serialization-roadmap.html">Data Serialization: A
+Roadmap</a>. This post
+follows <a href="/blog/2020/11/15/data-serialization-introduction.html">Data Serialization:
+Introduction</a>.</p>
+
+<p>In the previous post, we presented an example of data serialization and a
+definition. Recall that we introduced some data serialization design
+considerations by contriving two formats, the <a href="/blog/2020/11/15/data-serialization-introduction.html#newline-delimited-format">newline-delimited
+format</a>
+and the <a href="/blog/2020/11/15/data-serialization-introduction.html#key-value-format">key-value
+format</a>.
+While these contrived formats served as good examples, you should use an
+existing serialization format unless you have a compelling reason to design a
+new one. Chances are, there is already a format that meets your requirements.</p>
+
+<p>In this post, we cover the first of many serialization formats in the series:
+<strong>JavaScript Object Notation</strong>, commonly known as <strong>JSON</strong>. We start by
+introducing the JSON format. We then recast in JSON <a href="/blog/2020/11/15/data-serialization-introduction.html#an-example">our
+example</a>
+from the introduction. Finally, we examine some of JSON’s attributes and
+potential pitfalls. This post is not meant to be a practical guide on how to use
+JSON. We provide links at the end for further reading which include some
+practical resources.</p>
+
+<p>This post includes some code snippets to demonstrate various concepts. You do
+not need to know the languages used in the examples to follow along.</p>
+
+<h2 id="the-format">The Format</h2>
+
+<p>JSON is a subset of <a href="https://en.wikipedia.org/wiki/JavaScript">JavaScript</a>. If
+you have used JavaScript, JSON’s format will look familiar. In this section we
+will cover JSON’s data types and syntax. <a href="https://www.json.org">json.org</a>
+provides a complete description of the format.</p>
+
+<aside>
+  <p>Technically JSON was not a subset of JavaScript until the
+<a href="https://www.ecma-international.org/ecma-262/10.0/index.html">2019 ECMAScript language specification</a>.
+ECMAScript governs JavaScript implementations. Historically, JSON allowed
+unescaped Unicode line and paragraph separators in strings. These characters
+were not allowed in ECMAScript strings.
+<a href="https://github.com/tc39/proposal-json-superset">A recent proposal</a> changed
+ECMAScript to allow these characters, making JSON a subset of JavaScript.</p>
+</aside>
+
+<h3 id="primitive-types">Primitive Types</h3>
+
+<p>JSON supports the following primitive types:</p>
+
+<ul>
+  <li><strong>Numbers</strong>: Signed decimal numbers that may contain fractional parts. For
+example, <code class="language-plaintext highlighter-rouge">0</code>, <code class="language-plaintext highlighter-rouge">-1</code>, <code class="language-plaintext highlighter-rouge">1.2</code>, and <code class="language-plaintext highlighter-rouge">-1.1</code> are all valid JSON numbers. JSON also
+supports the
+<a href="https://en.wikipedia.org/wiki/Scientific_notation#E_notation">scientific E notation</a>.
+<code class="language-plaintext highlighter-rouge">2e3</code> and <code class="language-plaintext highlighter-rouge">2E3</code> can be used to represent <code class="language-plaintext highlighter-rouge">2000</code>. Like JavaScript, JSON does
+not make a distinction between integers and floating point numbers. Unlike
+JavaScript, <code class="language-plaintext highlighter-rouge">Nan</code> and <code class="language-plaintext highlighter-rouge">Infinity</code> are not allowed in JSON.</li>
+  <li><strong>Strings</strong>: Sequences of zero or more
+<a href="https://en.wikipedia.org/wiki/Unicode">Unicode characters</a>. Strings are
+delimited by double quotation marks. Strings support
+<a href="https://en.wikipedia.org/wiki/Escape_character">backslash escaping</a>. Examples
+include <code class="language-plaintext highlighter-rouge">""</code> for the empty string, <code class="language-plaintext highlighter-rouge">"Hello, world!"</code>,
+<code class="language-plaintext highlighter-rouge">"I\nCONTAIN\nLINE\nBREAKS"</code>, and <code class="language-plaintext highlighter-rouge">"I contain a \"quoted string\""</code>.</li>
+  <li><strong>Booleans</strong>: Literal values <code class="language-plaintext highlighter-rouge">true</code> and <code class="language-plaintext highlighter-rouge">false</code> represent booleans.</li>
+</ul>
+
+<p>A primitive type by itself is a valid JSON document. As an example, consider
+this Python interactive session where we deserialize some JSON primitives using
+the <a href="https://docs.python.org/3/library/json.html#json.loads"><code class="language-plaintext highlighter-rouge">json.loads</code></a>
+function:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">json</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">json</span><span class="p">.</span><span class="n">loads</span><span class="p">(</span><span class="s">'1'</span><span class="p">)</span>
+<span class="mi">1</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">json</span><span class="p">.</span><span class="n">loads</span><span class="p">(</span><span class="s">'651e2'</span><span class="p">)</span>
+<span class="mf">65100.0</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">json</span><span class="p">.</span><span class="n">loads</span><span class="p">(</span><span class="s">'"Hello, world!"'</span><span class="p">)</span>
+<span class="s">'Hello, world!'</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">json</span><span class="p">.</span><span class="n">loads</span><span class="p">(</span><span class="s">'true'</span><span class="p">)</span>
+<span class="bp">True</span>
+</code></pre></div></div>
+
+<h3 id="composite-types">Composite Types</h3>
+
+<p>To support complex data structures, JSON offers two composite types: arrays and
+objects.</p>
+
+<h4 id="arrays">Arrays</h4>
+
+<p>An array is an ordered list of zero or more values. Each value can be any JSON
+type. In other words, values of different types are permitted in an array.
+Arrays are delimited using square brackets and the values are comma-separated.
+Whitespace may be used liberally between values and the delimiters. The
+following are some array examples:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">[]</code></li>
+  <li><code class="language-plaintext highlighter-rouge">[1]</code></li>
+  <li><code class="language-plaintext highlighter-rouge">[1, 2, 3]</code></li>
+  <li><code class="language-plaintext highlighter-rouge">[ 1, 2 , 3 ]</code></li>
+  <li><code class="language-plaintext highlighter-rouge">[true, false, true]</code></li>
+  <li><code class="language-plaintext highlighter-rouge">[1, true, "Hello, world!"]</code></li>
+  <li><code class="language-plaintext highlighter-rouge">[[]]</code></li>
+  <li><code class="language-plaintext highlighter-rouge">[[1, 2, 3], ["hello", "world"], [true, false]]</code></li>
+</ul>
+
+<h4 id="objects">Objects</h4>
+
+<p>An object is an associative list. An association is a mapping from a string key
+to any value type. Objects are delimited using curly braces. The key and the
+value of a single mapping are separated using a colon. Mappings are separated by
+commas. Lik arrays, whitespace may be used liberally between values and
+delimiters. Here is an example:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Abraham Lincoln"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"birthday"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1809-02-12"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"federalRoles"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"role"</span><span class="p">:</span><span class="w"> </span><span class="s2">"president"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"range"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nl">"start"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1861-04-04"</span><span class="p">,</span><span class="w"> </span><span class="nl">"end"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1865-04-15"</span><span class="w"> </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"role"</span><span class="p">:</span><span class="w"> </span><span class="s2">"representative"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"range"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nl">"start"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1847-04-04"</span><span class="p">,</span><span class="w"> </span><span class="nl">"end"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1849-04-03"</span><span class="w"> </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="example">Example</h2>
+
+<p>Now that we’ve presented the JSON format, let’s revisit <a href="/blog/2020/11/15/data-serialization-introduction.html#an-example">the
+example</a>
+from the introduction, this time in JSON. Recall that in the introduction we
+contrived the <a href="/blog/2020/11/15/data-serialization-introduction.html#key-value-format">key-value
+format</a>
+in order to encode status updates:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>StatusMessage=Hello, world!
+LocationAsReportedByDevice=47.637087,-122.334543
+LocationAsReportedByUser=47.627577,-122.336694
+Timestamp=2020-11-13T19:05:15Z
+</code></pre></div></div>
+
+<p>The following is <em>one possible way</em> of representing a status update in JSON:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"statusMessage"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Hello, world!"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"location"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"fromDevice"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nl">"lat"</span><span class="p">:</span><span class="w"> </span><span class="mf">47.637087</span><span class="p">,</span><span class="w"> </span><span class="nl">"lon"</span><span class="p">:</span><span class="w"> </span><span class="mf">-122.334543</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"fromUser"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nl">"lat"</span><span class="p">:</span><span class="w"> </span><span class="mf">47.627577</span><span class="p">,</span><span class="w"> </span><span class="nl">"lon"</span><span class="p">:</span><span class="w"> </span><span class="mf">-122.336694</span><span class="w"> </span><span class="p">}</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"timestamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2020-11-13T19:05:15Z"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>An HTTP POST request containing this payload would look like:</p>
+
+<div class="language-http highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">POST</span> <span class="nn">/profiles/me/statuses</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">example.com</span>
+<span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
+<span class="na">Authorization</span><span class="p">:</span> <span class="s">...</span>
+<span class="s">...</span>
+
+<span class="p">{</span><span class="w">
+  </span><span class="nl">"statusMessage"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Hello, world!"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"location"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"fromDevice"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nl">"lat"</span><span class="p">:</span><span class="w"> </span><span class="mf">47.637087</span><span class="p">,</span><span class="w"> </span><span class="nl">"lon"</span><span class="p">:</span><span class="w"> </span><span class="mf">-122.334543</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"fromUser"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nl">"lat"</span><span class="p">:</span><span class="w"> </span><span class="mf">47.627577</span><span class="p">,</span><span class="w"> </span><span class="nl">"lon"</span><span class="p">:</span><span class="w"> </span><span class="mf">-122.336694</span><span class="w"> </span><span class="p">}</span><span class="w">
+   </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"timestamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2020-11-13T19:05:15Z"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Note that in addition to the payload changing, we’re also using a different
+<code class="language-plaintext highlighter-rouge">Content-Type</code> header value: <code class="language-plaintext highlighter-rouge">application/json</code>. This signals to the server that
+we are sending a JSON document in the body of the request.</p>
+
+<h2 id="deep-dive">Deep Dive</h2>
+
+<h3 id="standardization">Standardization</h3>
+
+<!-- TODO: Add links to future posts. -->
+
+<p>The JSON format is standardized concurrently under the
+<a href="http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf">ECMA-404 Standard</a>
+and <a href="https://tools.ietf.org/html/rfc8259">RFC 8259</a>. Not all popular
+serialization formats are standardized. Examples include YAML, Apache Avro, and
+Protocol Buffers, which we will cover in future posts. Standardization makes it
+easier for library authors to develop libraries that behave consistently across
+different languages and platforms. This means clients don’t have to worry about
+subtle serialization differences when crossing language and platform boundaries,
+provided conforming libraries are used.</p>
+
+<aside>
+  <p>Some JSON libraries deviate from the standard for convenience but offer an
+option for strict adherence. For example, the JSON module in Python’s standard
+library has an
+<a href="https://docs.python.org/3/library/json.html#json.dump"><code class="language-plaintext highlighter-rouge">allow_nan</code> option</a> that
+allows serialization of out-of-range floating point numbers. By default this
+option is enabled, allowing serialization of Python values <code class="language-plaintext highlighter-rouge">nan</code>, <code class="language-plaintext highlighter-rouge">inf</code>, and
+<code class="language-plaintext highlighter-rouge">-inf</code> into their JavaScript counterparts <code class="language-plaintext highlighter-rouge">Nan</code>, <code class="language-plaintext highlighter-rouge">Infinity</code>, and <code class="language-plaintext highlighter-rouge">-Infinity</code>.
+Recall that <code class="language-plaintext highlighter-rouge">Nan</code> and <code class="language-plaintext highlighter-rouge">Infinity</code> are not allowed in JSON. When operating in a
+distributed system, prefer strict adherence to the standard to avoid
+interoperability issues.</p>
+</aside>
+
+<h3 id="ubiquity">Ubiquity</h3>
+
+<p>JSON is used in many HTTP-based APIs. Prominent uses include APIs offered by
+<a href="https://cloud.google.com/apis">Google Cloud Platform</a>,
+<a href="https://docs.aws.amazon.com/">Amazon Web Services</a>,
+<a href="https://docs.microsoft.com/en-us/rest/api/azure/">Microsoft Azure</a>, and
+<a href="https://developer.twitter.com/en/docs">Twitter</a>. Ubiquity is a good attribute
+for a serialization format because it often translates to better library support
+across many programming languages and familiarity among developers who use the
+serialized data. This is part of the reason why JSON is found in so many APIs.
+You can view a list of JSON libraries on <a href="https://www.json.org">json.org</a>.</p>
+
+<h3 id="readability-and-performance">Readability and Performance</h3>
+
+<p>JSON is human readable. This is a useful property when developing or debugging a
+system. However, it’s important to acknowledge that readability comes at a
+performance cost. Compared to formats that do not prioritize readability, JSON
+serialization and deserialization can cost more
+<a href="https://en.wikipedia.org/wiki/Instruction_cycle">CPU cycles</a>. JSON documents
+also tend to be much larger than counterparts that prioritize performance. This
+can increase network bandwidth requirements for distributed systems that use
+JSON.</p>
+
+<p>As a salient example, consider <a href="https://kubernetes.io/">Kubernetes</a>. Kubernetes
+is a cluster management system that can manage thousands of machines. As of this
+writing, the Kubernetes control plane uses JSON for
+<a href="https://kubernetes.io/docs/concepts/overview/kubernetes-api/">its API</a> by
+default. The choice of JSON has proven to be a scalability bottleneck,
+preventing Kubernetes from reaching cluster sizes of 10,000 machines.</p>
+
+<p>There is currently
+<a href="https://stupefied-goodall-e282f7.netlify.app/contributors/design-proposals/api-machinery/protobuf/">a proposal</a>
+to support <a href="https://developers.google.com/protocol-buffers">Protocol Buffers</a>
+(covered in a future post) as an alternative serialization format for the
+Kubernetes API. Here are two interesting excerpts from the proposal:</p>
+
+<blockquote>
+  <p>At the current time, the latency of reaction to change in the cluster is
+dominated by the time required to load objects from persistent store (etcd),
+convert them to an output version, serialize them to JSON over the network,
+and then perform the reverse operation in clients. The cost of
+serialization/deserialization and the size of the bytes on the wire, as well
+as the memory garbage created during those operations, dominate the CPU and
+network usage of the API servers.</p>
+
+  <p>…</p>
+
+  <p>We propose to introduce a Protocol Buffer serialization for all common API
+objects that can optionally be used by intra-cluster components. Experiments
+have demonstrated a 10x reduction in CPU use during serialization and
+deserialization, a 2x reduction in size in bytes on the wire, and a 6-9x
+reduction in the amount of objects created on the heap during serialization.
+The Protocol Buffer schema for each object will be automatically generated
+from the external API Go structs we use to serialize to JSON.</p>
+</blockquote>
+
+<p>When designing a system, it’s important to understand whether serialization and
+deserialization can dominate performance. If the answer is yes, then JSON may
+not be the right format.</p>
+
+<h3 id="schema">Schema</h3>
+
+<p>The JSON format is self-describing. That is, there is no need to reference a
+separate document to understand what a JSON document contains. On the plus side,
+this affords more flexibility. It’s easy to add a new field to a data type
+without updating all participants (there are some exceptions to this, which we
+cover in the <a href="#unknown-fields">next section</a>). Additionally, middleware can
+perform structured logging of requests containing JSON documents without having
+to understand any application-level details.</p>
+
+<p>On the negative side, application developers are left to devise their own
+mechanisms for defining and enforcing data schemas: the JSON libraries are not
+helpful here. That said, <a href="https://json-schema.org/">JSON Schema</a> is a project
+that offers a mechanism for defining schemas for JSON objects. JSON Schema has a
+healthy <a href="https://json-schema.org/implementations.html">ecosystem of libraries</a>
+across dozens of languages and, as of this writing, is undergoing
+standardization.</p>
+
+<h3 id="unknown-fields">Unknown Fields</h3>
+
+<p>In large distributed systems, it is often desirable to evolve components
+independently of one another. This independence is important because it is often
+not possible to update all components in a timely manner or at all. Sometimes,
+we need to update data models, so it’s important to understand what the
+limitations of our serialization format are when it comes to data model changes.</p>
+
+<p>Let’s revisit our status sharing app <a href="#example">example</a>. Recall that a status
+update can be represented as JSON document like so:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"statusMessage"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Hello, world!"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"location"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"fromDevice"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nl">"lat"</span><span class="p">:</span><span class="w"> </span><span class="mf">47.637087</span><span class="p">,</span><span class="w"> </span><span class="nl">"lon"</span><span class="p">:</span><span class="w"> </span><span class="mf">-122.334543</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"fromUser"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nl">"lat"</span><span class="p">:</span><span class="w"> </span><span class="mf">47.627577</span><span class="p">,</span><span class="w"> </span><span class="nl">"lon"</span><span class="p">:</span><span class="w"> </span><span class="mf">-122.336694</span><span class="w"> </span><span class="p">}</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"timestamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2020-11-13T19:05:15Z"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Now suppose we add a feature where an author of a status update can include
+their sentiment in an update:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"statusMessage"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Hello, world!"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"sentiment"</span><span class="p">:</span><span class="w"> </span><span class="s2">"happy"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"location"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"fromDevice"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nl">"lat"</span><span class="p">:</span><span class="w"> </span><span class="mf">47.637087</span><span class="p">,</span><span class="w"> </span><span class="nl">"lon"</span><span class="p">:</span><span class="w"> </span><span class="mf">-122.334543</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"fromUser"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nl">"lat"</span><span class="p">:</span><span class="w"> </span><span class="mf">47.627577</span><span class="p">,</span><span class="w"> </span><span class="nl">"lon"</span><span class="p">:</span><span class="w"> </span><span class="mf">-122.336694</span><span class="w"> </span><span class="p">}</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"timestamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2020-11-13T19:05:15Z"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Also suppose clients can edit status updates by sending a POST request to the
+same path that contains the status:</p>
+
+<div class="language-http highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">POST</span> <span class="nn">/profiles/me/statuses/2020/11/13/0</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">example.com</span>
+<span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
+<span class="na">Authorization</span><span class="p">:</span> <span class="s">...</span>
+<span class="s">...</span>
+
+<span class="p">{</span><span class="w">
+  </span><span class="nl">"statusMessage"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Hello, world! And hello to all of my friends!"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"sentiment"</span><span class="p">:</span><span class="w"> </span><span class="s2">"happy"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"location"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"fromDevice"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nl">"lat"</span><span class="p">:</span><span class="w"> </span><span class="mf">47.637087</span><span class="p">,</span><span class="w"> </span><span class="nl">"lon"</span><span class="p">:</span><span class="w"> </span><span class="mf">-122.334543</span><span class="p">},</span><span class="w">
+    </span><span class="nl">"fromUser"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nl">"lat"</span><span class="p">:</span><span class="w"> </span><span class="mf">47.627577</span><span class="p">,</span><span class="w"> </span><span class="nl">"lon"</span><span class="p">:</span><span class="w"> </span><span class="mf">-122.336694</span><span class="p">}</span><span class="w">
+   </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"timestamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2020-11-13T19:05:15Z"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>This scenario can be problematic when using JSON libraries that deserialize data
+into predefined types that mirror the schema. Let’s consider what may happen
+when a client that understands the “sentiment” key is used to create a status
+update and a client that has not been updated is used to edit that update.</p>
+
+<p>To edit an update, a client would do the following:</p>
+
+<ol>
+  <li>Send an HTTP GET request to <code class="language-plaintext highlighter-rouge">/profiles/me/statuses/2020/11/13/0</code> to get the
+JSON payload of the status update. This JSON payload will include the
+“sentiment” key.</li>
+  <li>Deserialize the JSON payload into the object that represents a status update.
+Since the object type is predefined and the client has not been updated, the
+sentiment key is dropped during deserialization.</li>
+  <li>Make edits to the status update object.</li>
+  <li>Send an HTTP POST request to <code class="language-plaintext highlighter-rouge">/profiles/me/statuses/2020/11/13/0</code> with the
+edited status update as a serialized JSON document. This JSON document will
+not have the “sentiment” key, making the server think “sentiment” is being
+deleted.</li>
+</ol>
+
+<p>The following Go program provides a concrete example:</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+	<span class="s">"encoding/json"</span>
+	<span class="s">"fmt"</span>
+	<span class="s">"log"</span>
+<span class="p">)</span>
+
+<span class="c">// StatusUpdate is the Go type that mirrors a status update's JSON format.</span>
+<span class="k">type</span> <span class="n">StatusUpdate</span> <span class="k">struct</span> <span class="p">{</span>
+	<span class="n">StatusMessage</span> <span class="kt">string</span> <span class="s">`json:"statusMessage"`</span>
+
+	<span class="c">// Note "sentiment" is not defined.</span>
+	<span class="c">//</span>
+	<span class="c">// For simplicity, other fields are elided.</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="c">// Step 1 from above:</span>
+	<span class="n">myJSON</span> <span class="o">:=</span> <span class="s">`
+	{
+		"statusMessage": "Hello, World!",
+		"sentiment": "happy"
+	}`</span>
+
+	<span class="c">// Step 2 from above:</span>
+	<span class="n">update</span> <span class="o">:=</span> <span class="n">StatusUpdate</span><span class="p">{}</span>
+	<span class="k">if</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">json</span><span class="o">.</span><span class="n">Unmarshal</span><span class="p">([]</span><span class="kt">byte</span><span class="p">(</span><span class="n">myJSON</span><span class="p">),</span> <span class="o">&amp;</span><span class="n">update</span><span class="p">);</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+		<span class="n">log</span><span class="o">.</span><span class="n">Fatal</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+	<span class="p">}</span>
+
+	<span class="c">// Step 3 from above:</span>
+	<span class="n">update</span><span class="o">.</span><span class="n">StatusMessage</span> <span class="o">+=</span> <span class="s">" And hello to all of my friends!"</span>
+
+	<span class="c">// Step 4 from above:</span>
+	<span class="n">result</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">json</span><span class="o">.</span><span class="n">Marshal</span><span class="p">(</span><span class="n">update</span><span class="p">)</span>
+	<span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+		<span class="n">log</span><span class="o">.</span><span class="n">Fatal</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+	<span class="p">}</span>
+
+	<span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"%s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>The program above prints:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w"> </span><span class="nl">"statusMessage"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Hello, World! And hello to all of my friends!"</span><span class="w"> </span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Note that because we are using a predefined <code class="language-plaintext highlighter-rouge">StatusUpdate</code> struct without a
+field for sentiment, the “sentiment” key is dropped. JSON does not impose any
+requirements on library developers to handle unknown keys, so as a user of JSON,
+care must be taken to avoid this interoperability issue that can result in data
+loss.</p>
+
+<p>There are seveal ways to address this class of data loss:</p>
+
+<ul>
+  <li>Deserialize your JSON document into a data structure that can handle arbitrary
+data. JSON libraries in dynamically-typed languages generally do this by
+default. For example,
+<a href="https://docs.python.org/3/library/json.html">Python’s <code class="language-plaintext highlighter-rouge">json</code> module</a> returns
+either a primitive, a dict, or a list depending on the input data. There is no
+need to declare the expected keys. Many libraries in strongly-typed languages
+offer similar support. For example,
+<a href="https://golang.org/pkg/encoding/json">Go’s <code class="language-plaintext highlighter-rouge">encoding/json</code> package</a> can
+<a href="https://golang.org/pkg/encoding/json/#Unmarshal">deserialize data into a <code class="language-plaintext highlighter-rouge">map[string]interface{}</code></a>
+which can hold arbitrary JSON objects.</li>
+  <li>If there is a desire to use predefined types:
+    <ul>
+      <li>Use a library that can also store unknown keys. This way, on the
+serialization path, the library can write out the keys it does not
+understand instead of silently dropping them. There is
+<a href="https://github.com/golang/go/issues/22533">a pending proposal</a> to extend
+Go’s <code class="language-plaintext highlighter-rouge">endoding/json</code> package to support this behavior.</li>
+      <li>Use a library that can produce an error when an unknown key is encountered.
+While this may not be ideal in some cases, it does avoid data loss. As an
+example, <a href="https://github.com/FasterXML/jackson">Java’s Jackson JSON library</a>
+offers
+<a href="https://fasterxml.github.io/jackson-databind/javadoc/2.6/com/fasterxml/jackson/databind/DeserializationFeature.html#FAIL_ON_UNKNOWN_PROPERTIES">this behavior</a>.</li>
+    </ul>
+  </li>
+  <li>Design APIs that avoid write patterns that require all clients to be in
+agreement over the data schema. As an example, edits can be implemented using
+<a href="https://google.aip.dev/134">patch semantics</a>.</li>
+</ul>
+
+<h3 id="numbers">Numbers</h3>
+
+<p>The JSON standard has this to say about numbers:</p>
+
+<blockquote>
+  <p>This specification allows implementations to set limits on the range and
+precision of numbers accepted. Since software that implement IEEE 754 binary64
+(double precision) numbers [<a href="https://en.wikipedia.org/wiki/IEEE_754">IEEE754</a>]
+is generally available and widely used, good interoperability can be achieved
+by implementations that expect no more precision or range than these provide,
+in the sense that implementations will approximate JSON numbers within the
+expected precision.</p>
+</blockquote>
+
+<p>Note that the standard does not set range and precision requirements for
+numbers. Consider the following Python code that highlights an interoperability
+problem that can be caused by this lack of specificity:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">json</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">original_json</span> <span class="o">=</span> <span class="s">'3.141592653589793238462643383279'</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">number</span> <span class="o">=</span> <span class="n">json</span><span class="p">.</span><span class="n">loads</span><span class="p">(</span><span class="n">original_json</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">number</span>
+<span class="mf">3.141592653589793</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">new_json</span> <span class="o">=</span> <span class="n">json</span><span class="p">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">number</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">new_json</span>
+<span class="s">'3.141592653589793'</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">original_json</span> <span class="o">==</span> <span class="n">new_json</span>
+<span class="bp">False</span>
+</code></pre></div></div>
+
+<p>Note that converting <code class="language-plaintext highlighter-rouge">original_json</code> into a Python <code class="language-plaintext highlighter-rouge">float</code> leads to a loss of
+precision. A case like this implies that the system that produced
+<code class="language-plaintext highlighter-rouge">original_json</code> is capable of more precision than the Python environment that
+deserialized the JSON. This situation can lead to an interoperability problem
+where information is lost.</p>
+
+<p>In practice, this may not be a problem. Most software today use
+<a href="https://en.wikipedia.org/wiki/Double-precision_floating-point_format">double precision floating point numbers</a>
+and most applications do not require a range or precision greater than what’s
+offered by double precision floating point numbers. However, it’s prudent to
+check the implementation details of all JSON libraries that you plan to use to
+guard against interoperability issues. As an example, refer to the
+<a href="https://docs.python.org/3/library/json.html#implementation-limitations">Implementation Limitations</a>
+section of Python’s JSON library.</p>
+
+<h3 id="comments">Comments</h3>
+
+<p>Because JSON is human-readable and self-describing, it is often used as a
+configuration language. For example,
+<a href="https://code.visualstudio.com/docs/getstarted/settings">Visual Studio Code uses JSON</a>
+for storing user settings. Similarly, the
+<a href="https://firebase.google.com/docs/cli#the_firebasejson_file">Firebase command-line tool also uses JSON</a>.</p>
+
+<p>In the configuration context, it is often desirable to be able to add comments.
+However, JSON does not support comments. The author of JSON
+<a href="https://archive.vn/20150704102718/https://plus.google.com/+DouglasCrockfordEsq/posts/RK8qyGVaGSr">omitted comments</a>
+to prevent the possibility of comments that hold parsing directives, a practice
+that would have affected interoperability.</p>
+
+<p>For example, consider a JSON library that allows arrays to be sorted using a
+comment-based annotation:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># ORDERED
+[3, 2, 1]
+</code></pre></div></div>
+
+<p>The parsed array would be ordered when deserialized using this library, but
+because this behavior is non-standard, the order would be left as-is by other
+libraries, leading to interoperability issues.</p>
+
+<p>Some people get around the lack of comments by stripping comments prior to
+passing the JSON document to a JSON library. This practice works in static
+contexts, but as soon as a program needs to modify the JSON document, the
+comments are lost, unless a non-standard, comment-preserving JSON library is
+used. Others get around the lack of comments by using <code class="language-plaintext highlighter-rouge">#</code> as an object key:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"#"</span><span class="p">:</span><span class="w"> </span><span class="s2">"This is my comment describing this object."</span><span class="w">
+  </span><span class="nl">"myKey"</span><span class="p">:</span><span class="w"> </span><span class="mi">123</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>We do not recommend either of these strategies. For configuration where comments
+are desired, consider using a different format like <a href="https://yaml.org/">YAML</a> or
+<a href="https://hjson.github.io/">Hjson</a>. YAML will be covered in a future post. Hjson
+is left as an exercise to the reader.</p>
+
+<h2 id="additional-resources">Additional Resources</h2>
+
+<p>If you’d like to learn more about JSON, consider these resources:</p>
+
+<ul>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Objects/JSON">Working with JSON</a>
+by Mozilla</li>
+  <li><a href="https://docs.python.org/3/library/json.html">The Python <code class="language-plaintext highlighter-rouge">json</code> module introduction</a></li>
+  <li><a href="https://www.json.org">json.org</a></li>
+  <li>Specification:
+    <ul>
+      <li><a href="http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf">ECMA-404 Standard</a></li>
+      <li><a href="https://tools.ietf.org/html/rfc8259">RFC 8259</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="next">Next</h2>
+
+<p>In a future post, we will examine Protocol Buffers. Stay tuned!</p>
+
+        </main>
+    </body>
+</html>

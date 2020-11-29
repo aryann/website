@@ -244,4 +244,6 @@ a course offered by Google on Coursera.
 
 Armed with a definition of data serialization, we can now dive in and explore an
 assortment of popular data serialization formats along with the trade-offs at
-play. Stay tuned for the upcoming blog posts!
+play. The [next post in the
+series]({% post_url blog/2020-11-29-data-serialization-json %}) covers the
+**JavaScript Object Notation**, also known as **JSON**.

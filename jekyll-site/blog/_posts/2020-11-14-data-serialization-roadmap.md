@@ -58,6 +58,8 @@ have experience with the topic may find it helpful to skip certain sections.
 
 - [Data Serialization:
   Introduction]({% post_url blog/2020-11-15-data-serialization-introduction %})
+- [Data Serialization:
+  JSON]({% post_url blog/2020-11-29-data-serialization-json %})
 - ... more posts are coming soon. Watch this space!
 
 ## Next
