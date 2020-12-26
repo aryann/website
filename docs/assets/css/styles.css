@@ -41,6 +41,7 @@ p {
 header {
   background-color: aliceblue;
   border-bottom: 1px solid grey;
+  min-height: 8.5em;
 }
 
 header div {
