@@ -4,6 +4,6 @@ set -o errexit
 set -o nounset
 set -o xtrace
 
-DEST="$(mktemp --directory)"
+DEST="$(mktemp -d)"
 
 jekyll serve --source=jekyll-site --destination="${DEST}" --incremental --watch
