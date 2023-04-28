@@ -4,21 +4,21 @@ set -o errexit
 set -o nounset
 set -o xtrace
 
-DEST="$(mktemp --directory)"
+DEST="$(mktemp -d)"
 
 jekyll build --source=jekyll-site --destination="${DEST}"
 cp -r apps "${DEST}"
 cp CNAME "${DEST}"
 
-# git submodule update --init
+git submodule update --init
 
-# (
-#     cd seam-carving-js
-#     npm install
-#     PROD=1 gulp build
-#     cp -r dist "${DEST}/seam-carving"
-#     git checkout .
-# )
+(
+    cd seam-carving-js
+    npm install
+    PROD=1 gulp build
+    cp -r dist "${DEST}/seam-carving"
+    git checkout .
+)
 
-rm --force --recursive docs
+rm -rf docs
 mv ${DEST} docs
