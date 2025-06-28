@@ -10,7 +10,7 @@ jekyll build --source=jekyll-site --destination="${DEST}"
 cp -r apps "${DEST}"
 cp CNAME "${DEST}"
 
-git submodule update --init
+git submodule update --remote
 
 (
     cd seam-carving-js
