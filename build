@@ -1,24 +1,21 @@
 #!/bin/bash
 
+# Rebuilds the seam-carving app from the seam-carving-js submodule and
+# copies the result into docs/. The rest of the site is plain HTML that
+# lives directly in docs/ and needs no build step.
+
 set -o errexit
 set -o nounset
 set -o xtrace
 
-DEST="$(mktemp -d)"
-
-jekyll build --source=jekyll-site --destination="${DEST}"
-cp -r apps "${DEST}"
-cp CNAME "${DEST}"
-
-git submodule update --remote
+git submodule update --init --remote
 
 (
     cd seam-carving-js
     npm install
     PROD=1 gulp build
-    cp -r dist "${DEST}/seam-carving"
     git checkout .
 )
 
-rm -rf docs
-mv ${DEST} docs
+rm -rf docs/seam-carving
+cp -r seam-carving-js/dist docs/seam-carving
