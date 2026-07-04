@@ -1,139 +1,292 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <link as="font" href="/assets/fonts/OpenSans-Regular.ttf" rel="preload">
-        <link href="/assets/css/styles.css" rel="stylesheet">
-        <link href="/assets/css/code.css" rel="stylesheet">
+<!doctype html>
+<html lang="en" data-theme="midnight">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Aryan Naraghi</title>
+    <meta name="author" content="Aryan Naraghi" />
+    <meta
+      name="description"
+      content="Aryan Naraghi is a Member of Technical Staff at Anthropic."
+    />
+    <link rel="canonical" href="https://www.aryan.app/" />
+    <link rel="stylesheet" href="/assets/styles.css" />
 
-        <meta charset="utf-8">
-        <meta content="width=device-width, initial-scale=1.0" name="viewport">
-        <meta content="aliceblue" name="theme-color">
+    <script>
+      (function () {
+        var theme;
+        try {
+          theme =
+            new URLSearchParams(location.search).get("theme") ||
+            localStorage.getItem("theme");
+        } catch (e) {}
+        if (
+          /^(midnight|editorial|split|poster|glass|terminal|swiss|sunset|manifesto|hey|marker|crayon|sticker|notebook|candy)$/.test(
+            theme,
+          )
+        ) {
+          document.documentElement.setAttribute("data-theme", theme);
+        }
+      })();
+    </script>
 
-        <title>About</title>
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-SZ0YYPVWSP"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-SZ0YYPVWSP");
+    </script>
+  </head>
 
-        
+  <body>
+    <nav class="themes" aria-label="Color theme">
+      <button
+        data-theme="midnight"
+        title="Midnight"
+        aria-label="Midnight theme"
+      ></button>
+      <button
+        data-theme="editorial"
+        title="Editorial"
+        aria-label="Editorial theme"
+      ></button>
+      <button
+        data-theme="split"
+        title="Split"
+        aria-label="Split theme"
+      ></button>
+      <button
+        data-theme="poster"
+        title="Poster"
+        aria-label="Poster theme"
+      ></button>
+      <button
+        data-theme="glass"
+        title="Glass"
+        aria-label="Glass theme"
+      ></button>
+      <button
+        data-theme="terminal"
+        title="Terminal"
+        aria-label="Terminal theme"
+      ></button>
+      <button
+        data-theme="swiss"
+        title="Swiss"
+        aria-label="Swiss theme"
+      ></button>
+      <button
+        data-theme="sunset"
+        title="Sunset"
+        aria-label="Sunset theme"
+      ></button>
+      <button
+        data-theme="manifesto"
+        title="Manifesto"
+        aria-label="Manifesto theme"
+      ></button>
+      <button data-theme="hey" title="Hey" aria-label="Hey theme"></button>
+      <button
+        data-theme="marker"
+        title="Marker"
+        aria-label="Marker theme"
+      ></button>
+      <button
+        data-theme="crayon"
+        title="Crayon"
+        aria-label="Crayon theme"
+      ></button>
+      <button
+        data-theme="sticker"
+        title="Sticker"
+        aria-label="Sticker theme"
+      ></button>
+      <button
+        data-theme="notebook"
+        title="Notebook"
+        aria-label="Notebook theme"
+      ></button>
+      <button
+        data-theme="candy"
+        title="Candy"
+        aria-label="Candy theme"
+      ></button>
+    </nav>
 
+    <div class="wrap">
+      <header class="side">
+        <img
+          class="headshot"
+          src="/assets/headshot.webp"
+          alt="Photo of Aryan Naraghi"
+          width="1200"
+          height="1200"
+        />
+        <div class="side-text">
+          <h1><span>Aryan</span> <span>Naraghi</span></h1>
+          <nav class="side-contact" aria-label="Contact">
+            <a
+              href="mailto:aryan.naraghi@gmail.com"
+              title="Email"
+              aria-label="Email"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                  d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"
+                />
+              </svg>
+            </a>
+            <a href="https://github.com/aryann" title="GitHub" aria-label="GitHub">
+              <svg viewBox="0 0 16 16" aria-hidden="true">
+                <path
+                  d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"
+                />
+              </svg>
+            </a>
+            <a
+              href="https://www.linkedin.com/pub/aryan-naraghi/26/192/424"
+              title="LinkedIn"
+              aria-label="LinkedIn"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                  d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.36V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.55C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.72C24 .77 23.2 0 22.22 0z"
+                />
+              </svg>
+            </a>
+          </nav>
+        </div>
+      </header>
 
-<link rel="canonical" href="https://www.aryan.app/" />
+      <div class="content">
+        <section id="about">
+          <p>
+            I&rsquo;m a Member of Technical Staff at
+            <a href="https://www.anthropic.com">Anthropic</a>.
+          </p>
 
-<meta property="og:title" content="Aryan Naraghi's personal website" />
-<meta property="og:locale" content="en_US" />
-<meta property="og:url" content="https://www.aryan.app" />
-<meta property="og:description" content="Aryan Naraghi's personal website. Aryan Naraghi is a Staff Software Engineer at Google." />
+          <p>
+            I worked at Google from 2012 to 2021 and again from 2023 to 2026. I
+            contributed to
+            <a href="https://cloud.google.com/bigquery/">BigQuery</a>,
+            <a href="https://cloud.google.com/appengine">App Engine</a>,
+            <a href="https://marketingplatform.google.com/about/analytics/"
+              >Google Analytics</a
+            >, and
+            <a href="https://cloud.google.com/compute">Compute Engine</a>.
+          </p>
 
-<meta name="author" content="Aryan Naraghi" />
-<meta name="description" content="Aryan Naraghi's personal website. Aryan Naraghi is a Staff Software Engineer at Google." />
+          <p>
+            From 2021 to 2023, I worked at
+            <a href="https://rbi.com">Restaurant Brands International</a>, where
+            I led their data platform team.
+          </p>
 
-<script type="application/ld+json">
-  {
-    "@type": "WebSite",
-    "url": https://www.aryan.app",
-    "author": {
-      "@type": "Person",
-      "name": "Aryan Naraghi",
-      "email": "aryan.naraghi@gmail.com",
-      "url": "https://www.aryan.app"
-    },
-    "@context": "https://schema.org"
-  }
-</script>
+          <p>
+            I graduated from the
+            <a href="https://www.cs.washington.edu/"
+              >Paul G. Allen School of Computer Science &amp; Engineering</a
+            >
+            at the
+            <a href="https://www.washington.edu/">University of Washington</a>
+            in 2011.
+          </p>
+        </section>
 
-        <script
-  async
-  src="https://www.googletagmanager.com/gtag/js?id=G-SZ0YYPVWSP"
-></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag() {
-    dataLayer.push(arguments);
-  }
-  gtag("js", new Date());
-
-  gtag("config", "G-SZ0YYPVWSP");
-</script>
-
-    </head>
-
-    <body>
-        <header>
-            <div>
-                <h1>
-                    <a href="/">Aryan Naraghi</a>
-                </h1>
-                <nav>
-    <ul>
-        
+        <section id="talks">
+          <h2><span class="num">01</span>Talks</h2>
+          <ul>
             <li>
-                <a href="/"  class="selected-link" >
-                    Home
-                </a>
+              <a
+                href="https://schedule.cppnow.org/session/2026/from-20-nanoseconds-to-one/"
+                >From 20 Nanoseconds to One: Optimizing Bishop, Rook, and Queen
+                Move Generation in a Chess Engine</a
+              >
+              <span class="meta">C++Now, May 5, 2026</span>
+              <span class="meta"
+                ><a href="https://cppnow26.follychess.com/">slides</a></span
+              >
             </li>
-        
+          </ul>
+        </section>
+
+        <section id="projects">
+          <h2><span class="num">02</span>Projects</h2>
+          <p>A selection of things I&rsquo;ve built, past and present:</p>
+          <ul>
             <li>
-                <a href="/blog/" >
-                    Blog
-                </a>
+              <a href="https://yoslash.com">YoSlash</a>, memorable URL aliases
+              for enterprises
             </li>
-        
+            <li><a href="https://epochzone.com">EpochZone</a></li>
             <li>
-                <a href="/projects/" >
-                    Projects
-                </a>
+              <a href="https://follychess.com">FollyChess</a>, a UCI-compatible
+              chess engine written in C++23
             </li>
-        
-    </ul>
-</nav>
+            <li><a href="/seam-carving/">Seam carving demo</a></li>
+            <li>
+              <a href="https://collabpaint.aryan.app"
+                >A collaborative paint program</a
+              >
+            </li>
+            <li>
+              <a href="https://github.com/aryann/vfr-or-not">VFR or Not</a>, an
+              Android quiz app for pilots
+            </li>
+            <li>
+              <a href="https://github.com/aryann/difflib">difflib</a>, a diffing
+              library for Go
+            </li>
+            <li>
+              Visual illusions:
+              <ul>
+                <li>
+                  <a href="/randomstuff/forestfire.html">Forest-fire model</a>
+                </li>
+                <li>
+                  <a href="/randomstuff/cafewall.html"
+                    >The Caf&eacute; wall illusion</a
+                  >
+                </li>
+                <li>
+                  <a href="/randomstuff/parallellines.html"
+                    >The Z&ouml;llner optical illusion</a
+                  >
+                </li>
+                <li>
+                  <a href="/randomstuff/nonparallelchecker.html"
+                    >Non-parallel-looking checkerboard</a
+                  >
+                </li>
+                <li>
+                  <a href="/randomstuff/vectorfield.html">Vector field</a>
+                </li>
+              </ul>
+            </li>
+            <li>
+              <a href="https://github.com/aryann">More on GitHub</a>
+            </li>
+          </ul>
+        </section>
+      </div>
+    </div>
 
-            </div>
-        </header>
-
-        <main>
-            <h1>About</h1>
-            <div class="content">
-  <p>
-    Hello, and welcome to my website! My name is Aryan Naraghi. I currently work
-    at
-    <a href="https://google.com">Google</a> as a Staff Software Engineer on
-    <a href="https://cloud.google.com">Google Cloud Platform</a>.
-  </p>
-
-  <p>
-    Between 2021 to 2023, I worked for
-    <a href="https://rbi.com">Restaurant Brands International</a>, where I led
-    their data platform team and contributed to their point of sale system.
-  </p>
-
-  <p>
-    Between 2012 to 2021, I worked at Google as well where I contributed to
-    various projects, including
-    <a href="https://cloud.google.com/bigquery/">BigQuery</a>,
-    <a href="https://cloud.google.com/appengine">App Engine</a>,
-    <a href="https://marketingplatform.google.com/about/analytics/"
-      >Google Analytics</a
-    >, and <a href="https://cloud.google.com/compute">Compute Engine</a>.
-  </p>
-
-  <p>
-    I graduated from the
-    <a href="https://www.cs.washington.edu/"
-      >Paul G. Allen School of Computer Science &amp; Engineering</a
-    >
-    at the
-    <a href="https://www.washington.edu/">University of Washington</a>
-    in 2011.
-  </p>
-
-  <p>
-    If you&#39;d like to reach me, you can email me at
-    <a href="mailto:aryan.naraghi@gmail.com">aryan.naraghi@gmail.com</a>.
-    Elsewhere on the web, you can find me on
-    <a href="https://github.com/aryann">GitHub</a>
-    and
-    <a href="https://www.linkedin.com/pub/aryan-naraghi/26/192/424">LinkedIn</a
-    >.
-  </p>
-</div>
-
-        </main>
-    </body>
+    <script>
+      document.querySelectorAll(".themes button").forEach(function (button) {
+        button.addEventListener("click", function () {
+          var theme = button.dataset.theme;
+          document.documentElement.setAttribute("data-theme", theme);
+          try {
+            localStorage.setItem("theme", theme);
+          } catch (e) {}
+        });
+      });
+    </script>
+  </body>
 </html>

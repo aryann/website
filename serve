@@ -4,6 +4,4 @@ set -o errexit
 set -o nounset
 set -o xtrace
 
-DEST="$(mktemp -d)"
-
-jekyll serve --source=jekyll-site --destination="${DEST}" --incremental --watch
+python3 -m http.server 4000 --directory docs
