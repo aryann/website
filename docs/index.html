@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-theme="midnight">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -12,23 +12,6 @@
     <link rel="canonical" href="https://www.aryan.app/" />
     <link rel="stylesheet" href="/assets/styles.css" />
 
-    <script>
-      (function () {
-        var theme;
-        try {
-          theme =
-            new URLSearchParams(location.search).get("theme") ||
-            localStorage.getItem("theme");
-        } catch (e) {}
-        if (
-          /^(midnight|editorial|split|poster|glass|terminal|swiss|sunset|manifesto|hey|marker|crayon|sticker|notebook|candy)$/.test(
-            theme,
-          )
-        ) {
-          document.documentElement.setAttribute("data-theme", theme);
-        }
-      })();
-    </script>
 
     <script
       async
@@ -45,79 +28,6 @@
   </head>
 
   <body>
-    <nav class="themes" aria-label="Color theme">
-      <button
-        data-theme="midnight"
-        title="Midnight"
-        aria-label="Midnight theme"
-      ></button>
-      <button
-        data-theme="editorial"
-        title="Editorial"
-        aria-label="Editorial theme"
-      ></button>
-      <button
-        data-theme="split"
-        title="Split"
-        aria-label="Split theme"
-      ></button>
-      <button
-        data-theme="poster"
-        title="Poster"
-        aria-label="Poster theme"
-      ></button>
-      <button
-        data-theme="glass"
-        title="Glass"
-        aria-label="Glass theme"
-      ></button>
-      <button
-        data-theme="terminal"
-        title="Terminal"
-        aria-label="Terminal theme"
-      ></button>
-      <button
-        data-theme="swiss"
-        title="Swiss"
-        aria-label="Swiss theme"
-      ></button>
-      <button
-        data-theme="sunset"
-        title="Sunset"
-        aria-label="Sunset theme"
-      ></button>
-      <button
-        data-theme="manifesto"
-        title="Manifesto"
-        aria-label="Manifesto theme"
-      ></button>
-      <button data-theme="hey" title="Hey" aria-label="Hey theme"></button>
-      <button
-        data-theme="marker"
-        title="Marker"
-        aria-label="Marker theme"
-      ></button>
-      <button
-        data-theme="crayon"
-        title="Crayon"
-        aria-label="Crayon theme"
-      ></button>
-      <button
-        data-theme="sticker"
-        title="Sticker"
-        aria-label="Sticker theme"
-      ></button>
-      <button
-        data-theme="notebook"
-        title="Notebook"
-        aria-label="Notebook theme"
-      ></button>
-      <button
-        data-theme="candy"
-        title="Candy"
-        aria-label="Candy theme"
-      ></button>
-    </nav>
 
     <div class="wrap">
       <header class="side">
@@ -198,7 +108,7 @@
         </section>
 
         <section id="talks">
-          <h2><span class="num">01</span>Talks</h2>
+          <h2>Talks</h2>
           <ul>
             <li>
               <a
@@ -215,7 +125,7 @@
         </section>
 
         <section id="projects">
-          <h2><span class="num">02</span>Projects</h2>
+          <h2>Projects</h2>
           <p>A selection of things I&rsquo;ve built, past and present:</p>
           <ul>
             <li>
@@ -275,16 +185,5 @@
       </div>
     </div>
 
-    <script>
-      document.querySelectorAll(".themes button").forEach(function (button) {
-        button.addEventListener("click", function () {
-          var theme = button.dataset.theme;
-          document.documentElement.setAttribute("data-theme", theme);
-          try {
-            localStorage.setItem("theme", theme);
-          } catch (e) {}
-        });
-      });
-    </script>
   </body>
 </html>

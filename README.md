@@ -4,16 +4,10 @@ Personal website, served by GitHub Pages from the `docs/` directory. The
 site is plain HTML and CSS with no build step: `docs/` is the source of
 truth and is edited directly.
 
-The homepage has three visual themes (midnight, editorial, split),
-switchable via the dots in the top-right corner. The choice persists in
-localStorage; midnight is the default. A theme can also be forced with
-`?theme=<name>` in the URL. All themes share one HTML file and one
-stylesheet, keyed off the `data-theme` attribute on `<html>`.
-
 ## Layout
 
 - `docs/index.html` — the homepage (bio, talks, projects)
-- `docs/assets/` — stylesheet, self-hosted fonts, and images
+- `docs/assets/` — stylesheet and images
 - `docs/randomstuff/` — self-contained HTML5 canvas demos
 - `docs/showy/` — image gallery app
 - `docs/seam-carving/` — built output of the `seam-carving-js` submodule
