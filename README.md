@@ -9,7 +9,6 @@ truth and is edited directly.
 - `docs/index.html` — the homepage (bio, talks, projects)
 - `docs/assets/` — stylesheet and images
 - `docs/randomstuff/` — self-contained HTML5 canvas demos
-- `docs/showy/` — image gallery app
 - `docs/seam-carving/` — built output of the `seam-carving-js` submodule
 - `docs/projects/` — redirect stub for the old `/projects/` URL
 - `docs/CNAME` — GitHub Pages custom-domain record
