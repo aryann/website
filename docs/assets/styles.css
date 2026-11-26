@@ -162,12 +162,19 @@ h1 span:last-child {
 /* Section headings */
 
 h2 {
-  display: inline-block;
+  display: block;
+  width: fit-content;
   font-size: 1.55rem;
   font-weight: 800;
-  margin: 0 0 1rem -0.3em;
+  margin: 0 0 0.75rem -0.3em;
   padding: 0 0.3em;
   transform: rotate(-0.75deg);
+}
+
+/* Keep a heading close to the content it introduces: the gap below it
+   is much smaller than the gap above (the section margin). */
+h2 + * {
+  margin-top: 0;
 }
 
 #talks h2 {
